@@ -91,9 +91,7 @@ Invoked with `/name`. All manual-only except `/test-writer`.
 | `/setup-ci` | — | Scaffold a GitHub Actions CI for the detected stack. |
 | `/deploy` | `[vercel\|railway\|fly\|render]` | Detect stack, scaffold config, walk env-var checklist, deploy. |
 | `/standup` | `[hours]` | Standup from git + GitHub activity. Default 24h. |
-| `/explain` | `[file/fn]` | Summary, mental model, ASCII diagram, modification guide. |
 | `/test-writer` | *(auto)* | Comprehensive tests for new/changed code. The only auto-triggering skill. |
-| `/context-budget` | `[--api]` | Per-turn token cost of your `.claude/` config. |
 | `/code-review-graph-setup` | — | Install + wire + build the graph (normally handled by `/clik`). |
 
 > **Platform tooling is intentionally out of scope.** Vercel, Supabase, shadcn, Stripe, etc. are better served by the official Anthropic/vendor plugins and MCP servers. clik tailors your project's config and ships the review/workflow kit — it doesn't reinvent platform integrations.

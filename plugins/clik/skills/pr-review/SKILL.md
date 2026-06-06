@@ -83,6 +83,16 @@ If only one reviewer applies (a pure-docs diff, for example), a single `Task` ca
 
 While the reviewers run, you can read the PR description, recent CI logs, or open comments to enrich the synthesis in Step 4. Don't wait idly.
 
+## Step 3.5: Adversarially verify findings
+
+Agents run in isolation and produce some false positives — this step is what makes the review trustworthy instead of noisy. Before synthesizing, challenge what came back:
+
+- For every finding **not** rated high-confidence (and any finding whose validity depends on context the agent couldn't see), construct the strongest counterargument against it using the real code and the graph: is there an upstream guard or validation, is the path unreachable, is the "bug" intentional and covered by a test, does a caller already handle it? Use `query_graph_tool` (`callers_of`, `tests_for`) and `get_impact_radius_tool`, and read the specific lines — don't re-litigate from memory.
+- **Drop** findings that don't survive. **Downgrade** ones that only partially survive, noting the residual risk. Keep directly-evidenced high-confidence findings as-is.
+- Prefer false negatives over false positives. A review that cries wolf gets ignored.
+
+Record the filter in the synthesis: `N raised → M confirmed (K dropped on verification)`, so the user can see it working.
+
 ## Step 4: Synthesize Report
 
 Use the terse template by default. Use the verbose template only if the user passed `verbose`.

@@ -17,6 +17,7 @@ This is static analysis. You can read code and estimate impact but cannot profil
 - State assumptions explicitly. If you don't know how often a path runs, say so.
 - Surgical scope. Only flag issues introduced by the diff or made meaningfully worse by it.
 - Verify before flagging. Cite file:line and explain the cost model (frequency times per-call cost).
+- Self-challenge. Before flagging, argue it doesn't matter — is this path actually hot, is N actually large in practice, is there an upstream cache or index that already covers it? Ship only if the cost survives. A micro-optimization on a cold path is noise.
 - Confidence threshold. Only ship findings you're at least 80% sure cause measurable impact.
 
 ## How to review
