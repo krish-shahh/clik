@@ -61,20 +61,7 @@ Plugins can't ship permission rules, so add the universal secret `deny` block to
 
 It writes a tight `CLAUDE.md` (real build/test/lint commands for your toolchain), the relevant `.claude/rules/`, accurate `permissions`, builds the code-graph, and installs a git `post-commit` hook so the graph stays current. The context string wins over auto-detection when they disagree — you know your project.
 
-### Domain profiles
-
-`/clik` resolves your context against a library of tailoring recipes in [`skills/clik/profiles/`](skills/clik/profiles/). Profiles can be merged (e.g. `fastapi + react`), and if nothing fits, `/clik` synthesizes a config from your description and offers to save it as a new profile.
-
-| Profile | Tailors for | Tooling it wires |
-|---|---|---|
-| `generic` | fallback when no context given | detected package manager |
-| `cuda` | GPU / CUDA kernels | nvcc, cmake, compute-sanitizer, ncu/nsys |
-| `data-viz` | dashboards, plots, notebooks | jupyter, streamlit, reproducible figures |
-| `ml-training` | model training / fine-tuning | seeds, checkpoints, wandb/mlflow, leakage guards |
-| `web-frontend` | React/Next/Vue/Svelte UI | dev/build/typecheck, design tokens, a11y |
-| `backend-api` | REST/GraphQL/gRPC services | run/test/migrate, input validation, authz |
-| `python-cli` | libraries / CLIs | pip -e, pytest, mypy, public-API contracts |
-| `systems` | Rust / Go / C / C++ | cargo/go/cmake, sanitizers, race checks |
+There's no recipe library — `/clik` reasons from your context string plus the actual project and decides directly: a CUDA project gets `nvcc`/`compute-sanitizer`/`ncu` commands and a kernel-safety rule; a data-viz project gets notebook/figure commands and reproducibility rules; a Rust service gets `cargo`/clippy and an error-handling rule. The skill carries a short "what good tailoring looks like" checklist (real commands, scoped rules, encode the non-obvious gotchas, drop what doesn't apply) — not a static profile per domain to maintain.
 
 ## code-review-graph: traverse, don't scan
 
@@ -153,7 +140,7 @@ Single source of truth at the root; `scripts/sync-plugins.sh` generates the plug
 clik/
 ├── .claude-plugin/marketplace.json   # marketplace catalog
 ├── agents/        # source: specialist subagents
-├── skills/        # source: slash-command skills (incl. clik/ + clik/profiles/)
+├── skills/        # source: slash-command skills (incl. the clik/ setup skill)
 ├── rules/         # source: modular rules
 ├── hooks/         # source: hook scripts + git/post-commit + tests/
 ├── plugins/clik/  # generated: the one comprehensive plugin (skills+agents+hooks+template)

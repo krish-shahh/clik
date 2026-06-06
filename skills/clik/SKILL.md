@@ -9,7 +9,7 @@ allowed-tools: "Bash Read Write Edit Glob Grep AskUserQuestion"
 
 Set up clik for **this** project.
 
-`$ARGUMENTS` is a **freeform description of the project** the user typed after `/clik`. Treat it as the authoritative statement of what this project is and how it should be treated — weight it ABOVE auto-detection when the two disagree. Examples: `/clik cuda kernels, runs on a remote A100 cluster`, `/clik streamlit data-viz dashboard`, `/clik rust CLI, no_std embedded target`. If it is empty, fall back entirely to stack auto-detection and use the generic profile.
+`$ARGUMENTS` is a **freeform description of the project** the user typed after `/clik`. Treat it as the authoritative statement of what this project is and how it should be treated — weight it ABOVE auto-detection when the two disagree. Examples: `/clik cuda kernels, runs on a remote A100 cluster`, `/clik streamlit data-viz dashboard`, `/clik rust CLI, no_std embedded target`. If it is empty, fall back entirely to stack auto-detection.
 
 ## What clik already gives you globally (do NOT re-install per project)
 
@@ -29,24 +29,27 @@ Check `git log --oneline -20` for commit-message style.
 
 If the project is empty (no manifests, no source), write a minimal generic `CLAUDE.md`, tell the user customization is deferred until there's code, and stop.
 
-## Phase 2: Resolve the domain profile
+## Phase 2: Decide the tailoring (reason from the context + project)
 
-Profiles are tailoring recipes bundled with this skill at `${CLAUDE_SKILL_DIR}/profiles/`. List them: `ls "${CLAUDE_SKILL_DIR}/profiles/"`.
+There's no recipe library — use your own judgment. From `$ARGUMENTS` plus the Phase 1 detection, work out what this project actually is and what config serves it. You already know the toolchains; apply that knowledge directly.
 
-1. Combine `$ARGUMENTS` (the user's freeform context) with the Phase 1 detection to pick the best-fit profile. Each profile's top `Match:` line lists its trigger keywords/stacks.
-2. Read the chosen profile with `Read`. It tells you which commands, rules, domain-specific rule content, permissions, and gotchas to apply.
-3. **If `$ARGUMENTS` describes something no profile covers**, do NOT force a bad fit. Synthesize a tailored config from first principles, using the profile format (Commands / Rules / Domain rules / Permissions / Gotchas) as the template, and grounded in the user's context string. Offer to save it as a new profile at the end (Phase 5).
-4. More than one profile can apply (e.g. a "fastapi + react" app → `backend-api` + `web-frontend`). Merge them.
+What good tailoring looks like (the checklist to satisfy, not a script):
+- **Real commands** — the project's actual build / test / single-test / lint / format / dev commands, in the domain's real tools. A CUDA project means `nvcc`/`cmake`/`compute-sanitizer`/`ncu`, not `npm`. A data-viz project means notebook + figure-export. Reason it out from the stack and the context string.
+- **Encode the non-obvious gotchas** — the domain pitfalls a competent dev would want flagged (CUDA: check every CUDA call, run sanitizers, don't assume a local GPU; ML: seed RNGs, no data leakage across the split; systems: handle every error path, run race/sanitizer tools). Only things that would change how Claude works — skip the obvious.
+- **Right rules, scoped** — include the universal rules that apply, drop the ones that don't (no frontend → no `frontend.md`), and `paths:`-scope each to the project's real dirs so they only cost tokens near that code.
+- **Honor the context string over detection** when they conflict.
 
-Present the resolved plan with AskUserQuestion:
+If `$ARGUMENTS` is empty, do the same purely from detection. If it describes something niche you don't fully know, reason from first principles and say what you're unsure about.
+
+Present the plan with AskUserQuestion:
 
 ```
-Project context: "$ARGUMENTS"   (or "auto-detected" if none given)
-Resolved as: <profile(s)>  →  <one-line description of the tailoring>
+Project: "$ARGUMENTS"   (or "auto-detected" if none given)
+Read as: <one-line description of what this project is + how you'll tailor it>
 
 I'll write:
-- CLAUDE.md      — commands + <domain> sections
-- .claude/rules/ — <list of rules to include>
+- CLAUDE.md      — commands + <the few non-obvious lines>
+- .claude/rules/ — <rules to include, scoped to> <dirs>
 - .claude/settings.json — permissions for <toolchain>
 - code-review-graph — build + real-time update wiring
 
@@ -60,19 +63,19 @@ For each artifact, propose the concrete content and confirm before writing.
 ### 3.1 CLAUDE.md  (root; target < 25 non-blank lines, hard cap 50)
 
 Loads every turn — keep it lean. Write:
-- **Commands** — the REAL build / test / single-test / lint / format / dev commands from the detected manifest, NOT npm placeholders. The profile's `Commands` block shows the domain shape (e.g. CUDA → `nvcc`/`cmake`/`compute-sanitizer`/`ncu`; data-viz → notebook + figure-export commands).
-- Domain-specific **Architecture / Key Decisions / Domain Knowledge / Don'ts** lines drawn from the profile AND from the user's `$ARGUMENTS` context — but only lines that are non-obvious and would change how Claude works. Delete sections with nothing to say.
+- **Commands** — the REAL build / test / single-test / lint / format / dev commands from the detected manifest, NOT npm placeholders, in the domain's real tools (CUDA → `nvcc`/`cmake`/`compute-sanitizer`/`ncu`; data-viz → notebook + figure-export commands).
+- Domain-specific **Architecture / Key Decisions / Domain Knowledge / Don'ts** lines from the project AND the user's `$ARGUMENTS` context — but only lines that are non-obvious and would change how Claude works. Delete sections with nothing to say.
 - A one-line **Tools** note pointing at code-review-graph (see `.claude/rules/code-review-graph.md`).
 
 Do not duplicate anything that lives in `rules/`.
 
 ### 3.2 .claude/rules/
 
-Copy the universal rules from `${CLAUDE_PLUGIN_ROOT}/template/rules/` that the profile lists as applicable, then tailor each rule's `paths:` frontmatter to the project's actual directories. Always include `code-review-graph.md`. Add any **domain rules** the profile specifies as a new `.claude/rules/<domain>.md` (e.g. `cuda.md`, `data-viz.md`) with `paths:` scoped to the relevant files so they only cost tokens near that code. Drop rules that don't apply (no frontend → no `frontend.md`; no DB → no `database.md`).
+Copy the universal rules from `${CLAUDE_PLUGIN_ROOT}/template/rules/` that apply, then tailor each rule's `paths:` frontmatter to the project's actual directories. Always include `code-review-graph.md`. If the domain has non-obvious practices worth enforcing, write them as a new `.claude/rules/<domain>.md` (e.g. `cuda.md`, `data-viz.md`) with `paths:` scoped to the relevant files so they only cost tokens near that code. Drop rules that don't apply (no frontend → no `frontend.md`; no DB → no `database.md`).
 
 ### 3.3 .claude/settings.json
 
-Start from `${CLAUDE_PLUGIN_ROOT}/template/settings.json` (permissions only — hooks come from the plugin). Replace the `npm run …` allow entries with the project's real commands (from the profile's `Permissions` block + detected package manager). Keep the secret `deny` rules verbatim. Add `CLAUDE.local.md` to `.gitignore`.
+Start from `${CLAUDE_PLUGIN_ROOT}/template/settings.json` (permissions only — hooks come from the plugin). Replace the `npm run …` allow entries with the project's real commands (its actual toolchain + detected package manager). Keep the secret `deny` rules verbatim. Add `CLAUDE.local.md` to `.gitignore`.
 
 ## Phase 4: Wire code-review-graph (real-time traversal)
 
@@ -108,12 +111,11 @@ Tell the user Claude Code must be **restarted once** for the MCP server to activ
 
 - Count `CLAUDE.md` non-blank lines: `grep -cv '^[[:space:]]*$' CLAUDE.md`. Under 25 = good; 25–50 = offer trims; over 50 = block and cut the biggest sections before finishing.
 - Verify rule `paths:` match real directories, permissions cover the real commands, and no rule contradicts another or `CLAUDE.md`.
-- If you synthesized a config for an uncovered domain, offer to save it: `Write` it to `${CLAUDE_SKILL_DIR}/profiles/<name>.md` so future `/clik <that domain>` runs reuse it. (This edits the installed plugin cache; mention it's local until contributed upstream.)
 
 Summary:
 
 ```
-clik configured for: <profile(s)> — from context "$ARGUMENTS"
+clik configured — read as: <one-line description of the project> (from context "$ARGUMENTS")
 - CLAUDE.md: <N> non-blank lines — commands tailored for <toolchain>
 - rules: <included> (dropped: <removed>)
 - permissions: <toolchain>
