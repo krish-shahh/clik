@@ -1,0 +1,8 @@
+{
+  "name": "codex-tests",
+  "description": "Delegate test writing to Codex CLI. Finds changed files, runs Codex non-interactively, iterates until tests pass.",
+  "author": { "name": "krish-shahh" },
+  "license": "MIT",
+  "homepage": "https://github.com/krish-shahh/clik",
+  "repository": "https://github.com/krish-shahh/clik"
+}

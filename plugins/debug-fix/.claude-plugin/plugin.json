@@ -1,0 +1,8 @@
+{
+  "name": "debug-fix",
+  "description": "Find and fix a bug. Default is the careful path (reproduce, investigate, test). Add `--fast` for emergency hotfix mode.",
+  "author": { "name": "krish-shahh" },
+  "license": "MIT",
+  "homepage": "https://github.com/krish-shahh/clik",
+  "repository": "https://github.com/krish-shahh/clik"
+}

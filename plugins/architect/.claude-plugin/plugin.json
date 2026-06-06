@@ -1,0 +1,8 @@
+{
+  "name": "architect",
+  "description": "Design-phase agent. Explores the codebase and produces a concrete implementation plan before any code is written.",
+  "author": { "name": "krish-shahh" },
+  "license": "MIT",
+  "homepage": "https://github.com/krish-shahh/clik",
+  "repository": "https://github.com/krish-shahh/clik"
+}

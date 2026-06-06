@@ -1,0 +1,8 @@
+{
+  "name": "refactor",
+  "description": "Safely refactor with tests as a safety net. Writes tests first if none exist.",
+  "author": { "name": "krish-shahh" },
+  "license": "MIT",
+  "homepage": "https://github.com/krish-shahh/clik",
+  "repository": "https://github.com/krish-shahh/clik"
+}

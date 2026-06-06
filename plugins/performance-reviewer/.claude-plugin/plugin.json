@@ -1,0 +1,8 @@
+{
+  "name": "performance-reviewer",
+  "description": "Finds real bottlenecks. DB N+1, memory leaks, blocking calls, re-renders.",
+  "author": { "name": "krish-shahh" },
+  "license": "MIT",
+  "homepage": "https://github.com/krish-shahh/clik",
+  "repository": "https://github.com/krish-shahh/clik"
+}

@@ -1,0 +1,8 @@
+{
+  "name": "test-writer",
+  "description": "Write comprehensive tests covering happy/edge/error/concurrency paths. Verifies tests actually catch bugs.",
+  "author": { "name": "krish-shahh" },
+  "license": "MIT",
+  "homepage": "https://github.com/krish-shahh/clik",
+  "repository": "https://github.com/krish-shahh/clik"
+}

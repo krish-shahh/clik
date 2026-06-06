@@ -1,0 +1,63 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  hook-tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install jq (macOS)
+        if: runner.os == 'macOS'
+        run: brew install jq || true
+      - name: Install jq (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update -y && sudo apt-get install -y jq
+      - name: Run hook fixtures
+        run: bash hooks/tests/run-all.sh
+
+  shellcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install shellcheck
+        run: sudo apt-get update -y && sudo apt-get install -y shellcheck
+      - name: Lint hook + script shell files
+        run: |
+          # Lint the source-of-truth scripts (plugin copies are generated).
+          shellcheck -S warning hooks/*.sh hooks/git/* scripts/*.sh
+
+  json-valid:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install jq
+        run: sudo apt-get update -y && sudo apt-get install -y jq
+      - name: Validate all JSON manifests parse
+        run: |
+          fail=0
+          while IFS= read -r f; do
+            jq empty "$f" || { echo "INVALID: $f"; fail=1; }
+          done < <(find . -path ./.git -prune -o -name '*.json' -print)
+          exit $fail
+
+  sync-drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Regenerate plugins from source and check for drift
+        run: |
+          bash scripts/sync-plugins.sh
+          if ! git diff --quiet; then
+            echo "::error::plugins/ is out of sync with the source of truth."
+            echo "Edit the root agents/skills/rules/hooks/ then run scripts/sync-plugins.sh and commit."
+            git diff --stat
+            exit 1
+          fi

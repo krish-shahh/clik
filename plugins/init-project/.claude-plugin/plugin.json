@@ -1,0 +1,8 @@
+{
+  "name": "init-project",
+  "description": "Scaffold a new project with a GitHub repo, initial commit, and a CLAUDE.md ready for /clik.",
+  "author": { "name": "krish-shahh" },
+  "license": "MIT",
+  "homepage": "https://github.com/krish-shahh/clik",
+  "repository": "https://github.com/krish-shahh/clik"
+}

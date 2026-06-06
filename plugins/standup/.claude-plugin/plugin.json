@@ -1,0 +1,8 @@
+{
+  "name": "standup",
+  "description": "Generate a standup update from the last 24h of git activity, closed issues, and open PRs.",
+  "author": { "name": "krish-shahh" },
+  "license": "MIT",
+  "homepage": "https://github.com/krish-shahh/clik",
+  "repository": "https://github.com/krish-shahh/clik"
+}
