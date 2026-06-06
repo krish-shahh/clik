@@ -157,63 +157,32 @@ MIT. Use it, fork it, adapt it. See [LICENSE](LICENSE).
 clik is a **control stack** around the model — context & memory, tools, bounded sub-agents, and deterministic guardrails between the agent and your codebase.
 
 ```mermaid
-flowchart TB
-    U(["👤 Developer"]):::user
+flowchart LR
+    DEV["Developer"]:::io
+    CORE["Agent Core<br/>Claude Code orchestrator"]:::core
+    GUARD["Guardrails<br/>hooks · permissions"]:::edge
+    ENV["Environment<br/>codebase · git · GitHub"]:::io
 
-    subgraph ORCH["🧠 Orchestration"]
-        A["Claude Code · main agent loop<br/><i>plan → act → delegate → respond</i>"]:::orch
-    end
-
-    subgraph KNOW["📚 Context + Memory"]
-        direction LR
-        CM["CLAUDE.md<br/>project instructions"]:::mem
-        RL["rules<br/>quality · security · domain"]:::mem
-        KG[("code-review-graph<br/>structural knowledge graph")]:::mem
-    end
-
-    subgraph TOOLS["🛠 Tools / Skills"]
-        direction LR
-        SK["slash-command skills<br/>/clik /pr-review /tdd /ship …"]:::tool
-        CLI["CLIs<br/>git · gh"]:::tool
-    end
-
-    subgraph AGENTS["🤖 Specialist sub-agents · isolated context"]
-        direction LR
-        CR["code-reviewer"]:::agent
-        SR["security-reviewer"]:::agent
-        PRf["performance-reviewer"]:::agent
-        AR["architect"]:::agent
-    end
-
-    subgraph GUARD["🛡 Guardrails · deterministic hooks + permissions"]
-        direction LR
-        PRE["PreToolUse<br/>block secrets · risky cmds · protected files"]:::guard
-        POST["PostToolUse<br/>auto-format · refresh graph"]:::guard
-        PERM["permissions<br/>allow / deny"]:::guard
-    end
-
-    ENV[("💾 Environment<br/>codebase · git · GitHub")]:::env
-
-    U -->|prompt| A
-    KNOW -. retrieved context .-> A
-    A -->|invoke| TOOLS
-    A -->|delegate| AGENTS
-    AGENTS -. verified findings .-> A
-    A -->|tool calls| GUARD
+    DEV -->|prompt| CORE
+    CORE -->|tool calls| GUARD
     GUARD -->|allowed actions| ENV
-    ENV -. reindex on edit or commit .-> KG
-    A -->|response| U
+    CORE -->|response| DEV
+    ENV -.->|reindex graph| CORE
 
-    classDef user fill:#e8f0fe,stroke:#4285f4,color:#111,font-weight:bold;
-    classDef orch fill:#fff3cd,stroke:#e0a800,color:#111,font-weight:bold;
-    classDef mem fill:#e6f4ea,stroke:#34a853,color:#111;
-    classDef tool fill:#eaf2ff,stroke:#1a73e8,color:#111;
-    classDef agent fill:#fce8e6,stroke:#d93025,color:#111;
-    classDef guard fill:#fef7e0,stroke:#f9ab00,color:#111;
-    classDef env fill:#f1f3f4,stroke:#5f6368,color:#111;
+    subgraph RES["resources the agent draws on"]
+        direction TB
+        MEM["Memory · code-graph, rules, CLAUDE.md"]:::res
+        TOOL["Tools · skills, git, gh"]:::res
+        SUB["Sub-agents · code, security, performance, architect"]:::res
+    end
+
+    CORE --- RES
+
+    classDef io fill:#f6f8fa,stroke:#8b949e,color:#1f2328;
+    classDef core fill:#0969da,stroke:#0969da,color:#ffffff;
+    classDef edge fill:#ffffff,stroke:#0969da,color:#1f2328;
+    classDef res fill:#ffffff,stroke:#d0d7de,color:#1f2328;
+    style RES fill:#f6f8fa,stroke:#d0d7de,color:#57606a;
 ```
 
-- **Orchestration** — Claude Code drives the loop; `/clik` configures the project it runs in.
-- **Context & Memory** — `CLAUDE.md` + rules + the code-graph; the graph is the primary retrieval surface and is reindexed on every edit/commit.
-- **Tools & Sub-agents** — skills and CLIs are the actions; specialist agents run in isolated context and return findings that are adversarially verified before reaching you.
-- **Guardrails** — hooks and permissions sit between the agent and your repo, enforcing safety deterministically rather than by suggestion.
+The **Agent Core** (Claude Code) draws on three resource planes — **Memory** (the code-graph is the primary retrieval surface, reindexed on every edit/commit), **Tools** (skills + CLIs), and **Sub-agents** (specialist reviewers in isolated context, whose findings are adversarially verified). Every action it takes passes through **Guardrails** — hooks and permissions that enforce safety deterministically — before it touches your repo.
