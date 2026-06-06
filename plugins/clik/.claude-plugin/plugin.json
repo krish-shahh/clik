@@ -8,7 +8,5 @@
   "keywords": ["workflow", "code-review", "hooks", "scaffolding", "code-review-graph", "tdd"],
   "homepage": "https://github.com/krish-shahh/clik",
   "repository": "https://github.com/krish-shahh/clik",
-  "skills": "./skills/",
-  "agents": ["./agents/"],
   "hooks": "./hooks/hooks.json"
 }
