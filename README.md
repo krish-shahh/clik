@@ -151,3 +151,41 @@ clik/
 ## License
 
 MIT. Use it, fork it, adapt it. See [LICENSE](LICENSE).
+
+## How it fits together
+
+```mermaid
+flowchart TD
+    subgraph G["① Install once · user scope"]
+        M["marketplace<br/>krish-shahh/clik"] --> P["clik plugin<br/>enabled"]
+        P --> S["skills<br/>/clik /pr-review /tdd /ship /start-issue …"]
+        P --> A["agents<br/>code-reviewer · security-reviewer · architect …"]
+        P --> H["hooks<br/>protect · secrets · dangerous-cmds · format · update-graph · session-start"]
+        R["~/.claude/rules<br/>always-on quality + graph-first navigation"]
+    end
+
+    subgraph T["② Tailor a project · /clik (context)"]
+        C["/clik reasons from your<br/>context string + detected stack"]
+        C --> CM["CLAUDE.md<br/>real build / test / lint commands"]
+        C --> CR["scoped .claude/rules<br/>for the domain"]
+        C --> PE["permissions<br/>for the toolchain"]
+        C --> CG["code-review-graph<br/>built + kept fresh"]
+    end
+
+    subgraph W["③ Every session after"]
+        WK["hooks run automatically<br/>block secrets & risky commands · auto-format · refresh graph"]
+        NV["Claude navigates by the graph<br/>not random file reads"]
+        RV["/pr-review"] --> FN["fan out to specialist agents"]
+        FN --> VF["adversarial verify<br/>drop false positives"]
+        VF --> RP["severity-ranked report"]
+    end
+
+    G --> T --> W
+    H -.-> WK
+    CG -.-> NV
+    A -.-> FN
+```
+
+- **① is the kit** — enable one plugin and every project gets the skills, agents, and safety/graph hooks; the universal rules sit in `~/.claude/rules`.
+- **② is per-project** — `/clik` writes a tailored `CLAUDE.md`, scoped rules, permissions, and builds the code-graph.
+- **③ is the loop** — hooks enforce safety and keep the graph fresh, navigation goes through the graph, and `/pr-review` fans out to the agents then verifies findings before reporting.
