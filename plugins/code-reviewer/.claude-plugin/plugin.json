@@ -1,8 +1,0 @@
-{
-  "name": "code-reviewer",
-  "description": "Reviews code for real bugs: off-by-ones, null derefs, race conditions, swallowed errors. Skips style nitpicks.",
-  "author": { "name": "krish-shahh" },
-  "license": "MIT",
-  "homepage": "https://github.com/krish-shahh/clik",
-  "repository": "https://github.com/krish-shahh/clik"
-}

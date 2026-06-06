@@ -102,6 +102,7 @@ Invoked with `/name`. All manual-only except `/test-writer`.
 | `/debug-fix` | `[issue/error] [--fast]` | Reproduce → investigate → regression test → fix. `--fast` = hotfix mode. |
 | `/codex-tests` | `[file/dir]` | Delegate test-writing to Codex; iterate until green. |
 | `/codex-fix` | `[error]` | Delegate an isolated reproducible bug to Codex. |
+| `/codex-qa` | `[flows + env]` | Browser/E2E QA via Codex — drive user flows, catch regressions, report repro + severity. |
 | `/ship` | `[msg]` | Stage, commit (skipping secrets), push, open PR — confirmed at each step. |
 | `/setup-ci` | — | Scaffold a GitHub Actions CI for the detected stack. |
 | `/deploy` | `[vercel\|railway\|fly\|render]` | Detect stack, scaffold config, walk env-var checklist, deploy. |
@@ -110,6 +111,8 @@ Invoked with `/name`. All manual-only except `/test-writer`.
 | `/test-writer` | *(auto)* | Comprehensive tests for new/changed code. The only auto-triggering skill. |
 | `/context-budget` | `[--api]` | Per-turn token cost of your `.claude/` config. |
 | `/code-review-graph-setup` | — | Install + wire + build the graph (normally handled by `/clik`). |
+
+> **Platform tooling is intentionally out of scope.** Vercel, Supabase, shadcn, Stripe, etc. are better served by the official Anthropic/vendor plugins and MCP servers. clik tailors your project's config and ships the review/workflow kit — it doesn't reinvent platform integrations.
 
 ## Agents
 
@@ -153,9 +156,7 @@ clik/
 ├── skills/        # source: slash-command skills (incl. clik/ + clik/profiles/)
 ├── rules/         # source: modular rules
 ├── hooks/         # source: hook scripts + git/post-commit + tests/
-├── plugins/
-│   ├── clik/      # generated: comprehensive plugin (skills+agents+hooks+template)
-│   └── <feature>/ # generated: granular à-la-carte plugins
+├── plugins/clik/  # generated: the one comprehensive plugin (skills+agents+hooks+template)
 └── scripts/sync-plugins.sh
 ```
 

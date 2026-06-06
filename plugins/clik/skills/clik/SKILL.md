@@ -102,6 +102,8 @@ The real-time edit-time updater and the session-start builder already ship with 
 
 Tell the user Claude Code must be **restarted once** for the MCP server to activate.
 
+> Platform tooling (Vercel, Supabase, shadcn, etc.) is intentionally out of scope — use the official Anthropic/vendor plugins and MCP servers for those. clik tailors the project's config; it doesn't reinvent platform integrations.
+
 ## Phase 5: Review, budget check, summary
 
 - Count `CLAUDE.md` non-blank lines: `grep -cv '^[[:space:]]*$' CLAUDE.md`. Under 25 = good; 25–50 = offer trims; over 50 = block and cut the biggest sections before finishing.

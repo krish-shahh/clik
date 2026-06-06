@@ -63,7 +63,7 @@ Wait for confirmation.
 
 ```bash
 codex exec \
-  --sandbox workspace-write \
+  --sandbox workspace-write --ask-for-approval never \
   "Fix the following error. Do not change any logic that isn't directly related to this error.
    Run the test suite after fixing to verify the fix works and doesn't break anything else.
 
@@ -82,7 +82,7 @@ npm test 2>/dev/null || python -m pytest 2>/dev/null || go test ./... 2>/dev/nul
 
 If the fix introduced new failures, run Codex one more time:
 ```bash
-codex exec --sandbox workspace-write \
+codex exec --sandbox workspace-write --ask-for-approval never \
   "Your fix broke other tests. Original error is fixed but new failures appeared: [new failures]. Fix those without breaking the original fix."
 ```
 

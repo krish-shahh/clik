@@ -1,8 +1,0 @@
-{
-  "name": "start-issue",
-  "description": "Pick up a GitHub issue, create the feature branch, update CLAUDE.md, and assign yourself.",
-  "author": { "name": "krish-shahh" },
-  "license": "MIT",
-  "homepage": "https://github.com/krish-shahh/clik",
-  "repository": "https://github.com/krish-shahh/clik"
-}

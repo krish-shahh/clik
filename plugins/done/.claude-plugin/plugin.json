@@ -1,8 +1,0 @@
-{
-  "name": "done",
-  "description": "Close the active issue with a completion comment, open a PR, and queue the next task.",
-  "author": { "name": "krish-shahh" },
-  "license": "MIT",
-  "homepage": "https://github.com/krish-shahh/clik",
-  "repository": "https://github.com/krish-shahh/clik"
-}

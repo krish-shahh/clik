@@ -1,8 +1,0 @@
-{
-  "name": "code-review-graph-setup",
-  "description": "Install code-review-graph, wire it into Claude Code, build the knowledge graph, and report graph stats.",
-  "author": { "name": "krish-shahh" },
-  "license": "MIT",
-  "homepage": "https://github.com/krish-shahh/clik",
-  "repository": "https://github.com/krish-shahh/clik"
-}

@@ -1,8 +1,0 @@
-{
-  "name": "security-reviewer",
-  "description": "OWASP-style review: injection, auth, data exposure, weak crypto. Severity-ranked with file:line + fix.",
-  "author": { "name": "krish-shahh" },
-  "license": "MIT",
-  "homepage": "https://github.com/krish-shahh/clik",
-  "repository": "https://github.com/krish-shahh/clik"
-}

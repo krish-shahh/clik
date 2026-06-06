@@ -22,7 +22,7 @@ Thanks for wanting to make this better. This project aims to be the standard `.c
 - Project scaffolding skills. This repo is for daily work, not project creation.
 - Vendor-specific configurations (specific CI providers, cloud platforms, etc.)
 
-> Plugin packaging is welcome. clik itself ships as a marketplace (see the main README). Improvements to `marketplace.json`, the per-plugin `plugin.json` files, or `scripts/sync-plugins.sh` count as documentation improvements.
+> Plugin packaging is welcome. clik ships as a single comprehensive plugin via a marketplace (see the main README). Improvements to `marketplace.json`, `plugins/clik/.claude-plugin/plugin.json`, or `scripts/sync-plugins.sh` count as documentation improvements.
 
 ## PR rules
 
@@ -82,7 +82,7 @@ If you add or rename a skill or agent, also:
 
 - Add or update its entry in `.claude-plugin/marketplace.json`.
 - Add or update its `plugins/<name>/.claude-plugin/plugin.json`.
-- Run `scripts/sync-plugins.sh` to mirror it into its granular `plugins/<name>/` folder and into the comprehensive `plugins/clik/` plugin (skills, agents, and the regenerated `hooks/hooks.json`).
+- Run `scripts/sync-plugins.sh` to regenerate the comprehensive `plugins/clik/` plugin (skills, agents, and `hooks/hooks.json`).
 
 The root `agents/ skills/ rules/ hooks/` are the source of truth. Don't hand-edit anything inside `plugins/` — it is generated and will be overwritten on the next sync. CI fails if `plugins/` drifts from source.
 

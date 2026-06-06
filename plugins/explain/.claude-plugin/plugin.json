@@ -1,8 +1,0 @@
-{
-  "name": "explain",
-  "description": "Explain code with one-sentence summary, mental model, ASCII diagram, and modification guide.",
-  "author": { "name": "krish-shahh" },
-  "license": "MIT",
-  "homepage": "https://github.com/krish-shahh/clik",
-  "repository": "https://github.com/krish-shahh/clik"
-}

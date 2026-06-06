@@ -1,17 +1,11 @@
 #!/usr/bin/env bash
-# Generates the marketplace's plugin folders from the single source of truth at
-# the repo root (agents/ skills/ rules/ hooks/ settings.json CLAUDE.md).
+# Builds the single comprehensive `clik` plugin from the source of truth at the
+# repo root (agents/ skills/ rules/ hooks/ settings.json CLAUDE.md).
 #
-# Plugins must be self-contained — Claude Code copies each plugin into a cache
-# on install and paths can't escape the plugin root — so every agent/skill/hook
-# physically lives inside its plugin folder. Edit the root copies; run this to
-# propagate.
-#
-# It produces:
-#   1. Granular per-feature plugins      plugins/<name>/{agents,skills}/...
-#   2. The comprehensive `clik` plugin   plugins/clik/{skills,agents,hooks,template}
-#      — enable this one at user scope and you get every skill, agent, and the
-#        safety/format/session/graph hooks in EVERY project.
+# The plugin is self-contained — Claude Code copies it into a cache on install
+# and paths can't escape the plugin root — so every agent/skill/hook physically
+# lives inside it. Edit the root copies; run this to propagate. CI fails if the
+# generated plugin drifts from source.
 
 set -euo pipefail
 
@@ -19,22 +13,8 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 shopt -s nullglob
 
-echo "==> granular plugins"
-# agents/<name>.md -> plugins/<name>/agents/<name>.md
-for f in agents/*.md; do
-  name="$(basename "$f" .md)"; [ "$name" = "README" ] && continue
-  mkdir -p "plugins/$name/agents"; cp "$f" "plugins/$name/agents/$name.md"
-done
-# skills/<name>/ -> plugins/<name>/skills/<name>/   (the clik skill is handled below)
-for d in skills/*/; do
-  name="$(basename "$d")"; [ "$name" = "clik" ] && continue
-  [ -f "${d}SKILL.md" ] || continue
-  mkdir -p "plugins/$name/skills/$name"
-  cp -R "${d}." "plugins/$name/skills/$name/"
-done
-
-echo "==> comprehensive clik plugin"
 PLUGIN="plugins/clik"
+echo "==> building $PLUGIN"
 # Keep the static .claude-plugin/plugin.json; regenerate everything else.
 rm -rf "$PLUGIN/skills" "$PLUGIN/agents" "$PLUGIN/hooks" "$PLUGIN/template"
 mkdir -p "$PLUGIN/skills" "$PLUGIN/agents" "$PLUGIN/hooks" "$PLUGIN/template"
@@ -110,4 +90,4 @@ cp settings.json "$PLUGIN/template/settings.json"
 cp CLAUDE.md "$PLUGIN/template/CLAUDE.md"
 [ -f CLAUDE.local.md.example ] && cp CLAUDE.local.md.example "$PLUGIN/template/"
 
-echo "Done. clik plugin: $(ls "$PLUGIN/skills" | wc -l | tr -d ' ') skills, $(ls "$PLUGIN/agents" | wc -l | tr -d ' ') agents, hooks.json + template."
+echo "Done. $(ls "$PLUGIN/skills" | wc -l | tr -d ' ') skills, $(ls "$PLUGIN/agents" | wc -l | tr -d ' ') agents, hooks.json + template."

@@ -1,8 +1,0 @@
-{
-  "name": "codex-fix",
-  "description": "Delegate an isolated, reproducible bug to Codex CLI. Feed it the error, Codex fixes and verifies.",
-  "author": { "name": "krish-shahh" },
-  "license": "MIT",
-  "homepage": "https://github.com/krish-shahh/clik",
-  "repository": "https://github.com/krish-shahh/clik"
-}

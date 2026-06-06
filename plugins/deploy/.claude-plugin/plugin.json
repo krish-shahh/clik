@@ -1,8 +1,0 @@
-{
-  "name": "deploy",
-  "description": "Deploy to Vercel, Railway, Fly.io, or Render. Detects stack, scaffolds config, walks through env vars, and deploys with confirmation.",
-  "author": { "name": "krish-shahh" },
-  "license": "MIT",
-  "homepage": "https://github.com/krish-shahh/clik",
-  "repository": "https://github.com/krish-shahh/clik"
-}

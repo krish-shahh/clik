@@ -1,8 +1,0 @@
-{
-  "name": "ship",
-  "description": "Commit, push, create PR with confirmation at every step. Blocks secrets and force-push.",
-  "author": { "name": "krish-shahh" },
-  "license": "MIT",
-  "homepage": "https://github.com/krish-shahh/clik",
-  "repository": "https://github.com/krish-shahh/clik"
-}

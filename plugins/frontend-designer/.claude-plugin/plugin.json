@@ -1,8 +1,0 @@
-{
-  "name": "frontend-designer",
-  "description": "Builds production-grade UI. Tokens-first, anti-AI-slop aesthetics, design tokens enforced.",
-  "author": { "name": "krish-shahh" },
-  "license": "MIT",
-  "homepage": "https://github.com/krish-shahh/clik",
-  "repository": "https://github.com/krish-shahh/clik"
-}

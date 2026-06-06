@@ -1,8 +1,0 @@
-{
-  "name": "pr-review",
-  "description": "Review PR or staged changes via specialist agents. Synthesizes a unified severity-ranked report.",
-  "author": { "name": "krish-shahh" },
-  "license": "MIT",
-  "homepage": "https://github.com/krish-shahh/clik",
-  "repository": "https://github.com/krish-shahh/clik"
-}

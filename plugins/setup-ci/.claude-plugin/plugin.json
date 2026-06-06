@@ -1,8 +1,0 @@
-{
-  "name": "setup-ci",
-  "description": "Scaffold a GitHub Actions CI workflow tailored to the detected stack. Test, lint, typecheck on every PR.",
-  "author": { "name": "krish-shahh" },
-  "license": "MIT",
-  "homepage": "https://github.com/krish-shahh/clik",
-  "repository": "https://github.com/krish-shahh/clik"
-}

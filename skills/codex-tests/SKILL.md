@@ -47,7 +47,7 @@ Build the prompt from the target files list. Then run:
 
 ```bash
 codex exec \
-  --sandbox workspace-write \
+  --sandbox workspace-write --ask-for-approval never \
   "Write comprehensive tests for: [files]
 
   Requirements:
@@ -80,7 +80,7 @@ fi
 If tests fail, run Codex again with the failure output:
 
 ```bash
-codex exec --sandbox workspace-write \
+codex exec --sandbox workspace-write --ask-for-approval never \
   "The tests you wrote are failing. Fix them. Test output: [paste failure output]"
 ```
 

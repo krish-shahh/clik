@@ -1,8 +1,0 @@
-{
-  "name": "doc-reviewer",
-  "description": "Cross-references docs against actual source. Flags drift, missing params, dead references.",
-  "author": { "name": "krish-shahh" },
-  "license": "MIT",
-  "homepage": "https://github.com/krish-shahh/clik",
-  "repository": "https://github.com/krish-shahh/clik"
-}
