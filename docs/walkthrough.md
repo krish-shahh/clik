@@ -10,8 +10,7 @@ Before starting any project:
 
 - Claude Code installed and open
 - `gh auth login` done — GitHub CLI authenticated
-- `codex login` done — Codex CLI authenticated
-- clik installed: clone and copy into your project's `.claude/` ([see README](https://github.com/krish-shahh/clik#get-started)), then run `/clik`
+- clik installed: enable the `clik` plugin at user scope ([see README](https://github.com/krish-shahh/clik#install-once-for-all-projects)), then run `/clik` in your project
 
 ---
 
@@ -220,31 +219,17 @@ Now you understand exactly what to build. Use this as your implementation guide.
 
 Build one step at a time through the architect plan. Plan mode before each step if you want visibility, or just describe the step directly for straightforward work.
 
-### Write tests with Codex
+### Write tests
 
-Once the feature is built:
-
-```
-/codex-tests
-```
-
-Claude finds the files changed on this branch, runs Codex non-interactively:
+Once the feature is built, `/test-writer` triggers automatically on new code, mapping every path — happy, edge, error, concurrency — and verifying the tests actually catch bugs. For a test-first flow instead, drive it with `/tdd`:
 
 ```
-codex exec --sandbox workspace-write "write tests for lib/tasks.ts 
-and app/api/tasks/route.ts covering happy path, auth errors, 
-and permission checks"
+/tdd "tasks CRUD — create/read/update/delete within a project"
 ```
 
-Codex writes the tests, runs the suite, and iterates until they pass. Claude stages the test files and reports results.
+Red (failing test) → green (minimum code) → refactor, committing after each cycle.
 
-If any tests are red after Codex finishes, run:
-
-```
-/codex-fix "3 tests failing in tasks.test.ts — [paste failure output]"
-```
-
-Codex fixes them. If the failures are non-obvious (wrong test design, not wrong code), fall back to `/debug-fix` for manual investigation.
+If a test is red for a non-obvious reason, run `/debug-fix "3 tests failing in tasks.test.ts — [paste failure output]"` for a careful reproduce-investigate-fix pass.
 
 ### Review before merging
 
@@ -290,7 +275,7 @@ Pick up issue #7:
 
 For the Kanban board, use `@architect` again — it's a UI-heavy feature with drag-and-drop state. The architect will check what component library you're using (from the existing code), propose the state management approach, flag which existing components to extend vs replace.
 
-Build → `/codex-tests` → `/pr-review` → `/done`.
+Build → `/test-writer` → `/pr-review` → `/done`.
 
 ---
 
@@ -326,7 +311,7 @@ Outputs yesterday's commits, closed issues, open PRs, and any blockers. Paste it
 
 **Random error in CI:**
 ```
-/codex-fix "TypeError: Cannot read property 'id' of undefined 
+/debug-fix "TypeError: Cannot read property 'id' of undefined 
 in lib/tasks.ts:47"
 ```
 
@@ -351,7 +336,7 @@ for each issue:
   @architect (complex only)    understand what to build
   Shift+Tab → "build step X"   execution plan before edits
   ... build ...
-  /codex-tests                 tests
+  /test-writer (auto)          tests
   /pr-review                   review
   /done                        close, PR, next issue
 
@@ -369,5 +354,5 @@ for each issue:
 | Multi-file feature, approach unclear | `@architect` first, then Shift+Tab per step |
 | Simple bug fix or small addition | Just describe it directly, no plan mode needed |
 | Refactor across many files | `/refactor` handles this — has its own safety steps |
-| Tests needed | `/codex-tests` — no plan mode needed |
+| Tests needed | `/test-writer` (auto-triggers) or `/tdd` — no plan mode needed |
 | Emergency production bug | `/debug-fix --fast` |

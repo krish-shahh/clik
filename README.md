@@ -87,9 +87,6 @@ Invoked with `/name`. All manual-only except `/test-writer`.
 | `/tdd` | `[feature]` | Strict red-green-refactor loop, commit after each cycle. |
 | `/refactor` | `[target]` | Safe refactor with tests as a net; never mixes refactor with behavior change. |
 | `/debug-fix` | `[issue/error] [--fast]` | Reproduce → investigate → regression test → fix. `--fast` = hotfix mode. |
-| `/codex-tests` | `[file/dir]` | Delegate test-writing to Codex; iterate until green. |
-| `/codex-fix` | `[error]` | Delegate an isolated reproducible bug to Codex. |
-| `/codex-qa` | `[flows + env]` | Browser/E2E QA via Codex — drive user flows, catch regressions, report repro + severity. |
 | `/ship` | `[msg]` | Stage, commit (skipping secrets), push, open PR — confirmed at each step. |
 | `/setup-ci` | — | Scaffold a GitHub Actions CI for the detected stack. |
 | `/deploy` | `[vercel\|railway\|fly\|render]` | Detect stack, scaffold config, walk env-var checklist, deploy. |
@@ -151,7 +148,6 @@ clik/
 
 - **Claude Code** with `gh` authenticated (`gh auth login`)
 - **code-review-graph** — `pip install code-review-graph` (auto-installed by `/clik`)
-- **Codex CLI** in PATH (`codex login`) — for `/codex-tests` and `/codex-fix`
 - `jq` — `brew install jq` / `apt install jq` (used by hooks)
 
 ## License
