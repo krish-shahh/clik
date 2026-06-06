@@ -81,7 +81,7 @@ Invoked with `/name`. All manual-only except `/test-writer`.
 |---|---|---|
 | `/clik` | `[context]` | Tailor this project's CLAUDE.md, rules, permissions, and code-graph to its domain. |
 | `/init-project` | `[repo URL]` | Create/connect a GitHub repo, scaffold `CLAUDE.md`, commit and push. |
-| `/start-issue` | `[issue #]` | Create `feature/issue-N-slug`, capture graph context, update `## Active Issue`. |
+| `/start-issue` | `[issue #] [--worktree]` | Create `feature/issue-N-slug`, capture graph context, update `## Active Issue`. `--worktree` works the issue in an isolated git worktree. |
 | `/done` | — | Check ACs against the diff, get blast radius, post completion comment, close issue, open PR. |
 | `/pr-review` | `[PR #, "staged", file]` | Graph-scoped review via specialist agents; unified severity-ranked report. |
 | `/tdd` | `[feature]` | Strict red-green-refactor loop, commit after each cycle. |

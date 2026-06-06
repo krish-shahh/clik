@@ -159,6 +159,8 @@ Claude fetches issue #1, checks for blockers (none), creates `feature/issue-1-ne
 
 Every time you open Claude Code on this branch from now on, `session-start.sh` automatically injects the issue body into context. You don't have to re-explain what you're working on.
 
+Juggling more than one issue at a time? Add `--worktree` (`/start-issue 1 --worktree`) and Claude puts the issue in its own isolated working copy (`../taskflow-issue-1`) so you can work several in parallel without stashing and leave your main checkout untouched. Run `git worktree remove` after it merges.
+
 ### For simple issues — just build
 
 Issue #1 is "Set up Next.js project". It's mechanical. Just tell Claude what to do:

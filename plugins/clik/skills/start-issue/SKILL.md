@@ -1,7 +1,7 @@
 ---
 name: start-issue
-description: Pick up a GitHub issue, create the feature branch, update CLAUDE.md, and assign yourself.
-argument-hint: "[issue number]"
+description: Pick up a GitHub issue, create the feature branch, update CLAUDE.md, and assign yourself. Add --worktree to work in an isolated git worktree (juggle multiple issues without stashing, keep main clean).
+argument-hint: "[issue number] [--worktree]"
 disable-model-invocation: true
 allowed-tools:
   - Bash(git *)
@@ -11,6 +11,13 @@ allowed-tools:
 ---
 
 Start working on a GitHub issue: create the branch, update `CLAUDE.md`, and assign the issue.
+
+## Mode
+
+Check `$ARGUMENTS` for `--worktree` (strip it before parsing the issue number).
+
+- **Default**: create the feature branch in the current working copy and switch to it.
+- **`--worktree`**: create the branch in a separate, isolated git worktree (`../<repo>-issue-<N>`). Use this to work several issues in parallel without stashing, and to keep your main checkout untouched. All later steps then operate inside that worktree directory.
 
 ## Step 1: Resolve the issue number
 
@@ -55,10 +62,19 @@ Build the branch name: `feature/issue-<number>-<slug>` where `<slug>` is the iss
 
 Example: issue 42 "Add user authentication" → `feature/issue-42-add-user-authentication`
 
+**Default (branch in place):**
 ```bash
 git checkout -b feature/issue-<number>-<slug>
 git push -u origin feature/issue-<number>-<slug>
 ```
+
+**`--worktree` (isolated working copy):** create the branch in a sibling worktree directory and run the rest of the skill from there. Don't switch the current checkout's branch.
+```bash
+WT="../$(basename "$PWD")-issue-<number>"
+git worktree add -b feature/issue-<number>-<slug> "$WT" "$(git rev-parse --abbrev-ref HEAD)"
+git -C "$WT" push -u origin feature/issue-<number>-<slug>
+```
+Tell the user the worktree path and that they should `cd "$WT"` to work there. Steps 5–7 (graph context, `CLAUDE.md`, assignment) operate inside `$WT`. When the issue is done and merged, clean it up with `git worktree remove "$WT"`.
 
 ## Step 5: Get graph context (if code-review-graph is installed)
 
@@ -98,7 +114,7 @@ gh issue edit <number> --add-assignee @me
 ## Step 8: Report back
 
 Tell the user:
-- Branch created: `feature/issue-<number>-<slug>`
+- Branch created: `feature/issue-<number>-<slug>` (and, in `--worktree` mode, the worktree path + the `cd` to enter it)
 - Issue #<number> assigned to them
 - The acceptance criteria (extracted from the issue body), formatted as a checklist
-- Reminder: run `/done` when the work is complete
+- Reminder: run `/done` when the work is complete (and, for a worktree, `git worktree remove` after merge)
