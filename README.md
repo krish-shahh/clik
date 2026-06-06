@@ -152,40 +152,68 @@ clik/
 
 MIT. Use it, fork it, adapt it. See [LICENSE](LICENSE).
 
-## How it fits together
+## Architecture
+
+clik is a **control stack** around the model — context & memory, tools, bounded sub-agents, and deterministic guardrails between the agent and your codebase.
 
 ```mermaid
-flowchart TD
-    subgraph G["① Install once · user scope"]
-        M["marketplace<br/>krish-shahh/clik"] --> P["clik plugin<br/>enabled"]
-        P --> S["skills<br/>/clik /pr-review /tdd /ship /start-issue …"]
-        P --> A["agents<br/>code-reviewer · security-reviewer · architect …"]
-        P --> H["hooks<br/>protect · secrets · dangerous-cmds · format · update-graph · session-start"]
-        R["~/.claude/rules<br/>always-on quality + graph-first navigation"]
+flowchart TB
+    U(["👤 Developer"]):::user
+
+    subgraph ORCH["🧠 Orchestration"]
+        A["Claude Code · main agent loop<br/><i>plan → act → delegate → respond</i>"]:::orch
     end
 
-    subgraph T["② Tailor a project · /clik (context)"]
-        C["/clik reasons from your<br/>context string + detected stack"]
-        C --> CM["CLAUDE.md<br/>real build / test / lint commands"]
-        C --> CR["scoped .claude/rules<br/>for the domain"]
-        C --> PE["permissions<br/>for the toolchain"]
-        C --> CG["code-review-graph<br/>built + kept fresh"]
+    subgraph KNOW["📚 Context + Memory"]
+        direction LR
+        CM["CLAUDE.md<br/>project instructions"]:::mem
+        RL["rules<br/>quality · security · domain"]:::mem
+        KG[("code-review-graph<br/>structural knowledge graph")]:::mem
     end
 
-    subgraph W["③ Every session after"]
-        WK["hooks run automatically<br/>block secrets & risky commands · auto-format · refresh graph"]
-        NV["Claude navigates by the graph<br/>not random file reads"]
-        RV["/pr-review"] --> FN["fan out to specialist agents"]
-        FN --> VF["adversarial verify<br/>drop false positives"]
-        VF --> RP["severity-ranked report"]
+    subgraph TOOLS["🛠 Tools / Skills"]
+        direction LR
+        SK["slash-command skills<br/>/clik /pr-review /tdd /ship …"]:::tool
+        CLI["CLIs<br/>git · gh"]:::tool
     end
 
-    G --> T --> W
-    H -.-> WK
-    CG -.-> NV
-    A -.-> FN
+    subgraph AGENTS["🤖 Specialist sub-agents · isolated context"]
+        direction LR
+        CR["code-reviewer"]:::agent
+        SR["security-reviewer"]:::agent
+        PRf["performance-reviewer"]:::agent
+        AR["architect"]:::agent
+    end
+
+    subgraph GUARD["🛡 Guardrails · deterministic hooks + permissions"]
+        direction LR
+        PRE["PreToolUse<br/>block secrets · risky cmds · protected files"]:::guard
+        POST["PostToolUse<br/>auto-format · refresh graph"]:::guard
+        PERM["permissions<br/>allow / deny"]:::guard
+    end
+
+    ENV[("💾 Environment<br/>codebase · git · GitHub")]:::env
+
+    U -->|prompt| A
+    KNOW -. retrieved context .-> A
+    A -->|invoke| TOOLS
+    A -->|delegate| AGENTS
+    AGENTS -. verified findings .-> A
+    A -->|tool calls| GUARD
+    GUARD -->|allowed actions| ENV
+    ENV -. reindex on edit or commit .-> KG
+    A -->|response| U
+
+    classDef user fill:#e8f0fe,stroke:#4285f4,color:#111,font-weight:bold;
+    classDef orch fill:#fff3cd,stroke:#e0a800,color:#111,font-weight:bold;
+    classDef mem fill:#e6f4ea,stroke:#34a853,color:#111;
+    classDef tool fill:#eaf2ff,stroke:#1a73e8,color:#111;
+    classDef agent fill:#fce8e6,stroke:#d93025,color:#111;
+    classDef guard fill:#fef7e0,stroke:#f9ab00,color:#111;
+    classDef env fill:#f1f3f4,stroke:#5f6368,color:#111;
 ```
 
-- **① is the kit** — enable one plugin and every project gets the skills, agents, and safety/graph hooks; the universal rules sit in `~/.claude/rules`.
-- **② is per-project** — `/clik` writes a tailored `CLAUDE.md`, scoped rules, permissions, and builds the code-graph.
-- **③ is the loop** — hooks enforce safety and keep the graph fresh, navigation goes through the graph, and `/pr-review` fans out to the agents then verifies findings before reporting.
+- **Orchestration** — Claude Code drives the loop; `/clik` configures the project it runs in.
+- **Context & Memory** — `CLAUDE.md` + rules + the code-graph; the graph is the primary retrieval surface and is reindexed on every edit/commit.
+- **Tools & Sub-agents** — skills and CLIs are the actions; specialist agents run in isolated context and return findings that are adversarially verified before reaching you.
+- **Guardrails** — hooks and permissions sit between the agent and your repo, enforcing safety deterministically rather than by suggestion.
