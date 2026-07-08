@@ -72,10 +72,12 @@ if echo "$CONTENT" | grep -qiE '(password|secret|token|api_key|apikey|api_secret
 fi
 
 if [ -n "$MATCHES" ]; then
-  # Use "ask" not "deny". Warn the user but let them override (could be test fixtures)
+  # Use "ask" not "deny". Warn the user but let them override (could be test fixtures
+  # or .env.example placeholders). The ask JSON must exit 0 — exit 2 would surface as
+  # a generic hook error instead of an actual confirmation prompt.
   REASON="Possible secret detected in content:$MATCHES Review carefully before allowing."
   echo "{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"permissionDecision\":\"ask\",\"permissionDecisionReason\":\"$REASON\"}}"
-  exit 2
+  exit 0
 fi
 
 exit 0

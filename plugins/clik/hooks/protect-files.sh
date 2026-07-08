@@ -7,10 +7,13 @@ set -uo pipefail
 
 emit() {
   # $1 = decision (deny|ask) ; $2 = reason
+  # A JSON permissionDecision must be returned on exit 0 — exit 2 is the separate
+  # "block with a stderr message" channel and would make the harness ignore this
+  # JSON (reporting a generic "No stderr output" hook error instead).
   local decision="$1"
   local reason="${2//\"/\\\"}"
   printf '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"%s","permissionDecisionReason":"%s"}}\n' "$decision" "$reason"
-  exit 2
+  exit 0
 }
 
 if ! command -v jq >/dev/null 2>&1; then
@@ -27,9 +30,11 @@ BASENAME_LC=$(printf '%s' "$BASENAME" | tr '[:upper:]' '[:lower:]')
 PATH_LC=$(printf '%s' "$FILE_PATH" | tr '[:upper:]' '[:lower:]')
 
 # Protected basename patterns. Matched case-insensitively via BASENAME_LC.
+# NOTE: .env files are intentionally NOT blocked here — scaffolding a .env,
+# .env.example, or any variant is allowed. Reading the secret-bearing ones is
+# blocked at the permission layer (deny Read on real .env variants), which also
+# prevents editing an existing .env since Edit requires a prior Read.
 PROTECTED_PATTERNS=(
-  ".env"
-  ".env.*"
   "*.pem"
   "*.key"
   "*.crt"
@@ -67,8 +72,6 @@ case "$PATH_LC" in
     emit deny "Cannot edit files inside .git/" ;;
   secrets/*|*/secrets/*)
     emit deny "Cannot edit files inside secrets/" ;;
-  .env|.env.*|*/.env|*/.env.*)
-    emit deny "Cannot edit .env files" ;;
   .claude/hooks/*|*/.claude/hooks/*)
     emit deny "Cannot edit hook scripts. These enforce security boundaries." ;;
   .claude/settings.json|*/.claude/settings.json|.claude/settings.local.json|*/.claude/settings.local.json)

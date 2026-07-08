@@ -24,21 +24,30 @@
       "Bash(gh run *)"
     ],
     "deny": [
-      "Read(**/.env)",
-      "Read(**/.env.*)",
       "Read(**/secrets/**)",
       "Read(**/*.pem)",
       "Read(**/*.key)",
-      "Write(**/.env)",
-      "Write(**/.env.*)",
       "Write(**/secrets/**)",
       "Write(**/*.pem)",
       "Write(**/*.key)",
-      "Edit(**/.env)",
-      "Edit(**/.env.*)",
       "Edit(**/secrets/**)",
       "Edit(**/*.pem)",
-      "Edit(**/*.key)"
+      "Edit(**/*.key)",
+
+      "Read(//**/.env)",
+      "Read(//**/.env.local)",
+      "Read(//**/.env.*.local)",
+      "Read(//**/.env.development)",
+      "Read(//**/.env.production)",
+      "Read(//**/.env.staging)",
+      "Read(//**/.env.test)",
+      "Edit(//**/.env)",
+      "Edit(//**/.env.local)",
+      "Edit(//**/.env.*.local)",
+      "Edit(//**/.env.development)",
+      "Edit(//**/.env.production)",
+      "Edit(//**/.env.staging)",
+      "Edit(//**/.env.test)"
     ]
   }
 }

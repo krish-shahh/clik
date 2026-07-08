@@ -93,6 +93,7 @@ Invoked with `/name`. All manual-only except `/test-writer`.
 | `/standup` | `[hours]` | Standup from git + GitHub activity. Default 24h. |
 | `/test-writer` | *(auto)* | Comprehensive tests for new/changed code. The only auto-triggering skill. |
 | `/code-review-graph-setup` | — | Install + wire + build the graph (normally handled by `/clik`). |
+| `/story` | `[feature\|PR #\|project] [client scope]` | Frame a feature, PR, or the project into a customer demo story. |
 
 > **Platform tooling is intentionally out of scope.** Vercel, Supabase, shadcn, Stripe, etc. are better served by the official Anthropic/vendor plugins and MCP servers. clik tailors your project's config and ships the review/workflow kit — it doesn't reinvent platform integrations.
 
@@ -108,10 +109,11 @@ Auto-delegated by skills, or invoke directly with `@name`.
 | `@performance-reviewer` | N+1s, leaks, blocking I/O, re-renders, lock contention. |
 | `@frontend-designer` | Production UI with design tokens, a11y, no generic AI aesthetics. |
 | `@doc-reviewer` | Docs vs source drift, stale refs, missing params. |
+| `@sales-engineer` | Turns built software into a customer-ready demo story, tailored to a client scope. |
 
 ## Rules
 
-Modular, mostly path-scoped so they only cost tokens near matching files: `code-quality`, `testing`, `error-handling`, `security`, `database`, `observability`, `frontend`, `code-review-graph`. `/clik` selects and path-tunes the relevant ones per project.
+Modular, mostly path-scoped so they only cost tokens near matching files: `code-quality`, `testing`, `error-handling`, `security`, `database`, `observability`, `frontend`, `code-review-graph`, `sales-engineering`. `/clik` selects and path-tunes the relevant ones per project.
 
 ## Hooks
 
