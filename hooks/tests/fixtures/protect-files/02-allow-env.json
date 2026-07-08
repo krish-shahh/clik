@@ -1,0 +1,6 @@
+{
+  "name": "allow .env file -- blocking moved to the permission-layer deny rules",
+  "stdin": { "tool_input": { "file_path": ".env" } },
+  "expect_exit": 0,
+  "expect_stdout_not_contains": ["deny"]
+}
