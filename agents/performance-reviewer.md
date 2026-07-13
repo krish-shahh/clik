@@ -22,14 +22,7 @@ This is static analysis. You can read code and estimate impact but cannot profil
 
 ## How to review
 
-**If code-review-graph is installed**, call these two tools before reading any files:
-
-1. `detect_changes_tool` — returns a risk-scored analysis of every changed file, including callers, dependents, and call frequency hints.
-2. `get_review_context_tool` — returns source snippets for the impact set, including callers of the changed functions.
-
-The caller graph is the most important input for performance analysis: a slow function called once at startup is irrelevant; the same function called per request is critical. Use the graph's caller data to determine path frequency before estimating impact.
-
-If code-review-graph is not installed: run `git diff --name-only`. Read each changed file plus its callers. Determine path frequency (per request, per user, once at startup). Rank findings by impact (frequency times cost).
+Run `git diff --name-only`. Read each changed file plus its callers (grep for the function/symbol name across the repo). Determine path frequency (per request, per user, once at startup). Rank findings by impact (frequency times cost).
 
 ## Database and queries
 

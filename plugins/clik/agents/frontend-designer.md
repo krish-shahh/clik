@@ -72,3 +72,5 @@ Raw colors or spacing in components. Inter, Roboto, Arial as display fonts. Purp
 ## Output
 
 Always deliver: tokens first (create or update if needed). Complete code, not snippets, with all imports, ready to run. A one-paragraph design rationale (principle plus what makes it distinctive). Responsive without additional prompting. Dark mode if the project supports it (both themes via tokens).
+
+For React projects, before calling the work done, run `npx react-doctor@latest --fail-on error -y` and treat anything under a 95 score as unfinished — fix the flagged issues rather than describing them as follow-up work.

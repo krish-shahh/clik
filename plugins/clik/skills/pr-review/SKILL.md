@@ -16,24 +16,6 @@ Check `$ARGUMENTS` for the word `verbose`. Strip it from the argument string bef
 
 When dispatching reviewers in Step 3, include the word `verbose` in each `Task` call's prompt only if the user asked for it. Otherwise omit; the reviewers default to terse.
 
-## Step 0: Graph context (if code-review-graph is installed)
-
-Before determining scope, get structural context for the changed files:
-
-```
-detect_changes_tool(ref="HEAD")
-```
-
-This returns a risk-scored list of changed files with their blast radius — callers, dependents, and test coverage gaps. Also call:
-
-```
-get_impact_radius_tool(files=[<list of changed files from detect_changes_tool>])
-```
-
-Store the impact set and blast radius summary. You will pass this context to each reviewer agent in Step 3 so they scope their review to the actual impact set — not the entire repo.
-
-If code-review-graph is not installed, skip this step. The reviewer agents fall back to `git diff` scanning.
-
 ## Step 1: Determine Scope
 
 Parse `$ARGUMENTS` to determine what to review:
@@ -76,9 +58,6 @@ Decide which reviewers apply by reading the diff content, not just file paths:
 
 **Dispatch all applicable reviewers in PARALLEL.** Send one message that contains one `Task` tool call per applicable reviewer (use `subagent_type` matching the reviewer name). Do NOT invoke them sequentially. Parallel dispatch cuts wall-clock time from N times the slowest review to roughly the slowest single review, with no extra token cost.
 
-If you ran Step 0, include the blast radius summary at the top of each agent's prompt:
-> "Impact set from code-review-graph: [list of files]. Blast radius: [summary]. Focus your review on files in this impact set."
-
 If only one reviewer applies (a pure-docs diff, for example), a single `Task` call is fine. Skip the parallel pattern when there's nothing to parallelize.
 
 While the reviewers run, you can read the PR description, recent CI logs, or open comments to enrich the synthesis in Step 4. Don't wait idly.
@@ -87,7 +66,7 @@ While the reviewers run, you can read the PR description, recent CI logs, or ope
 
 Agents run in isolation and produce some false positives — this step is what makes the review trustworthy instead of noisy. Before synthesizing, challenge what came back:
 
-- For every finding **not** rated high-confidence (and any finding whose validity depends on context the agent couldn't see), construct the strongest counterargument against it using the real code and the graph: is there an upstream guard or validation, is the path unreachable, is the "bug" intentional and covered by a test, does a caller already handle it? Use `query_graph_tool` (`callers_of`, `tests_for`) and `get_impact_radius_tool`, and read the specific lines — don't re-litigate from memory.
+- For every finding **not** rated high-confidence (and any finding whose validity depends on context the agent couldn't see), construct the strongest counterargument against it using the real code: is there an upstream guard or validation, is the path unreachable, is the "bug" intentional and covered by a test, does a caller already handle it? Grep for callers and existing tests, and read the specific lines — don't re-litigate from memory.
 - **Drop** findings that don't survive. **Downgrade** ones that only partially survive, noting the residual risk. Keep directly-evidenced high-confidence findings as-is.
 - Prefer false negatives over false positives. A review that cries wolf gets ignored.
 

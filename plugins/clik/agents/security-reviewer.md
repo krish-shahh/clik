@@ -20,14 +20,7 @@ You are a senior security engineer reviewing code for vulnerabilities. This is s
 
 ## How to review
 
-**If code-review-graph is installed**, call these two tools before reading any files:
-
-1. `detect_changes_tool` — returns a risk-scored analysis of every changed file, including callers, dependents, and test coverage gaps.
-2. `get_review_context_tool` — returns source snippets and structural context for the impact set, token-efficient.
-
-Use the returned file list as your review scope. Cross-reference related patterns within the impact set (one SQL injection pattern often has siblings). Do not manually scan files outside the impact set.
-
-If code-review-graph is not installed: run `git diff --name-only`, read each changed file, grep the codebase for related patterns (one SQL injection often means more elsewhere). Cover every category below; skip nothing.
+Run `git diff --name-only`, read each changed file, grep the codebase for related patterns (one SQL injection often means more elsewhere). Cover every category below; skip nothing.
 
 ## Injection
 

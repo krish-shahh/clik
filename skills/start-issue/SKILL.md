@@ -74,21 +74,9 @@ WT="../$(basename "$PWD")-issue-<number>"
 git worktree add -b feature/issue-<number>-<slug> "$WT" "$(git rev-parse --abbrev-ref HEAD)"
 git -C "$WT" push -u origin feature/issue-<number>-<slug>
 ```
-Tell the user the worktree path and that they should `cd "$WT"` to work there. Steps 5–7 (graph context, `CLAUDE.md`, assignment) operate inside `$WT`. When the issue is done and merged, clean it up with `git worktree remove "$WT"`.
+Tell the user the worktree path and that they should `cd "$WT"` to work there. Steps 5–6 (`CLAUDE.md`, assignment) operate inside `$WT`. When the issue is done and merged, clean it up with `git worktree remove "$WT"`.
 
-## Step 5: Get graph context (if code-review-graph is installed)
-
-Before starting work, capture a structural snapshot of the codebase relevant to this issue:
-
-```
-get_minimal_context_tool(query="<issue title>")
-```
-
-This returns the minimal set of files and symbols the graph thinks are relevant to the task. Store the summary — you will write it into `CLAUDE.md` alongside the ticket body so Claude has structural context from the moment work begins.
-
-If code-review-graph is not installed, skip this step.
-
-## Step 6: Update CLAUDE.md
+## Step 5: Update CLAUDE.md
 
 Read `CLAUDE.md`. Find the `## Active Issue` section. Replace its content with:
 
@@ -98,20 +86,17 @@ Read `CLAUDE.md`. Find the `## Active Issue` section. Replace its content with:
 Issue #<number>: <title>
 
 <full issue body verbatim>
-
-### Graph context
-<paste the get_minimal_context_tool summary here, or "not available" if skipped>
 ```
 
 If there is no `## Active Issue` section, append it at the end of the file.
 
-## Step 7: Assign the issue
+## Step 6: Assign the issue
 
 ```bash
 gh issue edit <number> --add-assignee @me
 ```
 
-## Step 8: Report back
+## Step 7: Report back
 
 Tell the user:
 - Branch created: `feature/issue-<number>-<slug>` (and, in `--worktree` mode, the worktree path + the `cd` to enter it)

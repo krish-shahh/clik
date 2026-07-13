@@ -109,15 +109,4 @@ if [ "$IS_FEATURE_BRANCH" = "1" ]; then
   echo "Reminder: run /done when this issue is complete to post the completion comment and open a PR."
 fi
 
-# ── code-review-graph: auto-build if installed but graph missing ────────────
-# Runs silently in the background — no output on success, one line if building.
-if command -v code-review-graph >/dev/null 2>&1; then
-  REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
-  if [ -n "$REPO_ROOT" ] && [ ! -d "$REPO_ROOT/.codegraph" ]; then
-    echo "code-review-graph: building knowledge graph for this project..."
-    (cd "$REPO_ROOT" && code-review-graph build >/dev/null 2>&1 && \
-      echo "code-review-graph: graph ready.") &
-  fi
-fi
-
 exit 0

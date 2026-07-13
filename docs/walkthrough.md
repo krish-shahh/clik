@@ -95,7 +95,7 @@ First, point `/clik` at the project so its config matches the stack:
 /clik next.js app with prisma, clerk auth, deployed on vercel
 ```
 
-Claude writes a lean `CLAUDE.md` (real `pnpm` commands), the relevant rules (frontend, security, database, error-handling — path-scoped), permissions for the toolchain, and builds the code-graph.
+Claude writes a lean `CLAUDE.md` (real `pnpm` commands), the relevant rules (frontend, security, database, error-handling — path-scoped), and permissions for the toolchain.
 
 Then plan the build. Ask `@architect` to break the PRD into phased, shippable issues:
 

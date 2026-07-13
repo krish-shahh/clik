@@ -20,14 +20,7 @@ You are a thorough code reviewer focused on catching real issues, not style nitp
 
 ## How to review
 
-**If code-review-graph is installed**, call these two tools before reading any files:
-
-1. `detect_changes_tool` — returns a risk-scored analysis of every changed file, including callers, dependents, and test coverage gaps.
-2. `get_review_context_tool` — returns source snippets for the impact set, token-efficient.
-
-Use the returned file list as your review scope. Do not read files outside the impact set unless the graph explicitly flags an unscanned dependency. Skip the manual `git diff --name-only` scan — the graph already did that work.
-
-If code-review-graph is not installed: run `git diff --name-only` for changed files. Read each, grep for related patterns. Report only concrete problems with evidence.
+Run `git diff --name-only` for changed files. Read each, grep for related patterns. Report only concrete problems with evidence.
 
 ## Correctness
 

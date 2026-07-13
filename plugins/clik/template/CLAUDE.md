@@ -47,7 +47,3 @@ npm run dev              # start dev server
 ## Don'ts
 
 - Don't modify generated files (`*.gen.ts`, `*.generated.*`)
-
-## Tools
-
-Navigate this codebase through `code-review-graph` (see `.claude/rules/code-review-graph.md`), not random file reads. Set up by `/clik`; the graph refreshes automatically after edits and commits. Rebuild manually: `code-review-graph build`.

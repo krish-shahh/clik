@@ -61,7 +61,7 @@ In `--fast` mode, skip this step. Trust the report and move to Step 5.
 
 In `--fast` mode, skip this and go to Step 5. Trust the report and minimize investigation depth.
 
-Don't skip ahead to guessing. **If code-review-graph is installed, trace through the graph instead of grepping**: `semantic_search_nodes_tool` to locate the symbol, `query_graph_tool` `callers_of`/`callees_of` to walk the call chain back to the source, and `get_impact_radius_tool` on the fix site so your regression test covers every affected caller — not just the one in the stack trace.
+Don't skip ahead to guessing.
 
 1. Locate the symptom. Which file and line produces the wrong output?
 2. Read the code path backwards. What called this? What data was passed?

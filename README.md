@@ -1,11 +1,11 @@
 # clik
 
-A complete Claude Code setup you enable **once** and get in **every** project: specialist review agents, workflow skills, safety/format hooks, and a code-graph that Claude navigates instead of reading files at random. Then run `/clik` in any repo to tailor its `CLAUDE.md`, rules, and tooling to what that project actually is — generic by default, or CUDA / data-viz / ML / web / backend / systems on request.
+A complete Claude Code setup you enable **once** and get in **every** project: specialist review agents, workflow skills, and safety/format hooks. Then run `/clik` in any repo to tailor its `CLAUDE.md`, rules, and tooling to what that project actually is — generic by default, or CUDA / data-viz / ML / web / backend / systems on request.
 
 Two layers:
 
 - **Global layer** — the `clik` plugin, enabled at user scope, ships every skill, agent, and hook to every project automatically. No per-project copying.
-- **Per-project layer** — `/clik [context]` writes a lean, tailored `CLAUDE.md` + rules + permissions for the repo you're in, and wires the code-graph.
+- **Per-project layer** — `/clik [context]` writes a lean, tailored `CLAUDE.md` + rules + permissions for the repo you're in.
 
 ## Install (once, for all projects)
 
@@ -29,7 +29,7 @@ Or set it declaratively in `~/.claude/settings.json`:
 }
 ```
 
-That alone gives you — in every project — all the skills, the `@code-reviewer` / `@security-reviewer` / `@architect` agents, and hooks that block dangerous commands, scan for secrets, protect sensitive files, auto-format on save, and keep the code-graph fresh.
+That alone gives you — in every project — all the skills, the `@code-reviewer` / `@security-reviewer` / `@architect` agents, and hooks that block dangerous commands, scan for secrets, protect sensitive files, and auto-format on save.
 
 ### Recommended: secret-protection at user scope
 
@@ -59,19 +59,9 @@ Plugins can't ship permission rules, so add the universal secret `deny` block to
 /clik rust CLI, no_std embedded target
 ```
 
-It writes a tight `CLAUDE.md` (real build/test/lint commands for your toolchain), the relevant `.claude/rules/`, accurate `permissions`, builds the code-graph, and installs a git `post-commit` hook so the graph stays current. The context string wins over auto-detection when they disagree — you know your project.
+It writes a tight `CLAUDE.md` (real build/test/lint commands for your toolchain), the relevant `.claude/rules/`, and accurate `permissions`. The context string wins over auto-detection when they disagree — you know your project.
 
 There's no recipe library — `/clik` reasons from your context string plus the actual project and decides directly: a CUDA project gets `nvcc`/`compute-sanitizer`/`ncu` commands and a kernel-safety rule; a data-viz project gets notebook/figure commands and reproducibility rules; a Rust service gets `cargo`/clippy and an error-handling rule. The skill carries a short "what good tailoring looks like" checklist (real commands, scoped rules, encode the non-obvious gotchas, drop what doesn't apply) — not a static profile per domain to maintain.
-
-## code-review-graph: traverse, don't scan
-
-clik leans on [`code-review-graph`](https://pypi.org/project/code-review-graph/) — a structural index of every symbol, call edge, import, and test. The bundled rule makes the graph Claude's **primary way to navigate code**: it queries `get_minimal_context_tool`, `semantic_search_nodes_tool`, and `query_graph_tool` (callers / callees / tests / impact) before ever reaching for Grep or random file reads. That's faster, cheaper in tokens, and structurally aware.
-
-The graph is kept **fresh in real time**:
-
-- **after Claude edits a file** — an async `PostToolUse` hook incrementally rebuilds in the background (`hooks/update-graph.sh`), so the next traversal sees the change with zero added latency.
-- **after every commit** — a git `post-commit` hook (`hooks/git/post-commit`, installed by `/clik`) catches edits made outside Claude (your IDE, `git pull`, merges).
-- **at session start** — builds the graph if it's missing.
 
 ## Skills
 
@@ -79,20 +69,26 @@ Invoked with `/name`. All manual-only except `/test-writer`.
 
 | Command | Args | Description |
 |---|---|---|
-| `/clik` | `[context]` | Tailor this project's CLAUDE.md, rules, permissions, and code-graph to its domain. |
+| `/clik` | `[context]` | Tailor this project's CLAUDE.md, rules, and permissions to its domain. |
 | `/init-project` | `[repo URL]` | Create/connect a GitHub repo, scaffold `CLAUDE.md`, commit and push. |
-| `/start-issue` | `[issue #] [--worktree]` | Create `feature/issue-N-slug`, capture graph context, update `## Active Issue`. `--worktree` works the issue in an isolated git worktree. |
-| `/done` | — | Check ACs against the diff, get blast radius, post completion comment, close issue, open PR. |
-| `/pr-review` | `[PR #, "staged", file]` | Graph-scoped review via specialist agents; unified severity-ranked report. |
+| `/interview` | `[topic]` | One-question-at-a-time interview to extract real requirements before coding. |
+| `/idea-refine` | `[rough idea]` | Diverge then converge a vague idea into a concrete proposal. |
+| `/spec` | `[feature/project name]` | Write a PRD — objectives, scope, structure, conventions, testing, boundaries. |
+| `/plan` | `[spec file \| feature]` | Decompose a spec into small, verifiable tasks with acceptance criteria and dependency order. |
+| `/start-issue` | `[issue #] [--worktree]` | Create `feature/issue-N-slug`, update `## Active Issue`. `--worktree` works the issue in an isolated git worktree. |
+| `/done` | — | Check ACs against the diff, post completion comment, close issue, open PR. |
+| `/pr-review` | `[PR #, "staged", file]` | Review via specialist agents in parallel; unified severity-ranked report. |
+| `/doubt` | `[decision/claim]` | Adversarial CLAIM → EXTRACT → DOUBT → RECONCILE stress-test of an in-flight decision. |
 | `/tdd` | `[feature]` | Strict red-green-refactor loop, commit after each cycle. |
 | `/refactor` | `[target]` | Safe refactor with tests as a net; never mixes refactor with behavior change. |
 | `/debug-fix` | `[issue/error] [--fast]` | Reproduce → investigate → regression test → fix. `--fast` = hotfix mode. |
-| `/ship` | `[msg]` | Stage, commit (skipping secrets), push, open PR — confirmed at each step. |
+| `/adr` | `[decision title]` | Write an Architecture Decision Record for a significant technical decision. |
+| `/deprecate` | `[API/module/system]` | Mark deprecated, migrate callers, remove on a set timeline. |
+| `/ship` | `[msg]` | Stage, commit (skipping secrets), push, open PR — confirmed at each step. Gates React projects on a react-doctor score ≥95. |
 | `/setup-ci` | — | Scaffold a GitHub Actions CI for the detected stack. |
 | `/deploy` | `[vercel\|railway\|fly\|render]` | Detect stack, scaffold config, walk env-var checklist, deploy. |
 | `/standup` | `[hours]` | Standup from git + GitHub activity. Default 24h. |
 | `/test-writer` | *(auto)* | Comprehensive tests for new/changed code. The only auto-triggering skill. |
-| `/code-review-graph-setup` | — | Install + wire + build the graph (normally handled by `/clik`). |
 | `/story` | `[feature\|PR #\|project] [client scope]` | Frame a feature, PR, or the project into a customer demo story. |
 
 > **Platform tooling is intentionally out of scope.** Vercel, Supabase, shadcn, Stripe, etc. are better served by the official Anthropic/vendor plugins and MCP servers. clik tailors your project's config and ships the review/workflow kit — it doesn't reinvent platform integrations.
@@ -113,7 +109,7 @@ Auto-delegated by skills, or invoke directly with `@name`.
 
 ## Rules
 
-Modular, mostly path-scoped so they only cost tokens near matching files: `code-quality`, `testing`, `error-handling`, `security`, `database`, `observability`, `frontend`, `code-review-graph`, `sales-engineering`. `/clik` selects and path-tunes the relevant ones per project.
+Modular, mostly path-scoped so they only cost tokens near matching files: `code-quality`, `testing`, `context-engineering` (always-on), and `error-handling`, `security`, `database`, `observability`, `frontend`, `api-design`, `sales-engineering` (path-scoped). `/clik` selects and path-tunes the relevant ones per project.
 
 ## Hooks
 
@@ -126,8 +122,7 @@ Ship in the plugin (`plugins/clik/hooks/hooks.json`) and fire in every project o
 | `warn-large-files` | PreToolUse Edit/Write | Block writes to build artifacts and binaries. |
 | `block-dangerous-commands` | PreToolUse Bash | Block push-to-main, force push, `rm -rf /`, `DROP TABLE`, `curl \| sudo`. |
 | `format-on-save` | PostToolUse Edit/Write | Auto-format (Prettier/Black/Ruff/Biome/rustfmt/gofmt). |
-| `update-graph` | PostToolUse Edit/Write | Async incremental code-graph refresh. |
-| `session-start` | SessionStart | Branch + dirty state, active issue body, builds graph if missing. |
+| `session-start` | SessionStart | Branch + dirty state, active issue body. |
 
 ## Repo layout
 
@@ -147,7 +142,6 @@ clik/
 ## Requirements
 
 - **Claude Code** with `gh` authenticated (`gh auth login`)
-- **code-review-graph** — `pip install code-review-graph` (auto-installed by `/clik`)
 - `jq` — `brew install jq` / `apt install jq` (used by hooks)
 
 ## License
@@ -169,11 +163,10 @@ flowchart LR
     CORE -->|tool calls| GUARD
     GUARD -->|allowed actions| ENV
     CORE -->|response| DEV
-    ENV -.->|reindex graph| CORE
 
     subgraph RES["resources the agent draws on"]
         direction TB
-        MEM["Memory · code-graph, rules, CLAUDE.md"]:::res
+        MEM["Memory · rules, CLAUDE.md"]:::res
         TOOL["Tools · skills, git, gh"]:::res
         SUB["Sub-agents · code, security, performance, architect"]:::res
     end
@@ -187,4 +180,4 @@ flowchart LR
     style RES fill:#f6f8fa,stroke:#d0d7de,color:#57606a;
 ```
 
-The **Agent Core** (Claude Code) draws on three resource planes — **Memory** (the code-graph is the primary retrieval surface, reindexed on every edit/commit), **Tools** (skills + CLIs), and **Sub-agents** (specialist reviewers in isolated context, whose findings are adversarially verified). Every action it takes passes through **Guardrails** — hooks and permissions that enforce safety deterministically — before it touches your repo.
+The **Agent Core** (Claude Code) draws on three resource planes — **Memory** (rules and `CLAUDE.md`), **Tools** (skills + CLIs), and **Sub-agents** (specialist reviewers in isolated context, whose findings are adversarially verified). Every action it takes passes through **Guardrails** — hooks and permissions that enforce safety deterministically — before it touches your repo.

@@ -54,6 +54,7 @@ Determine:
 - **Test runner**: Jest / Vitest / pytest / Go test / cargo test (check `package.json#scripts.test`)
 - **Linter**: ESLint / Biome / Ruff / flake8 / golangci-lint
 - **Typecheck**: `tsc` / `pyright` / `mypy`
+- **React**: check if `package.json` depends on `react` — if so, include a react-doctor quality gate step
 
 ## Step 3: Show the proposed CI config and confirm
 
@@ -97,6 +98,11 @@ jobs:
       # test
       - name: Test
         run: <test-command>
+
+      # react-doctor quality gate (React projects only)
+      - name: react-doctor
+        run: npx react-doctor@latest --fail-on error --annotations -y
+        if: <only if React detected>
 ```
 
 Ask the user:

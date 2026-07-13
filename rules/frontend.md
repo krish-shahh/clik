@@ -75,3 +75,13 @@ Use whatever the project already has. Don't mix competing libraries.
 - Animations: `transform` and `opacity` only.
 - Large lists: virtualize at 100+ items.
 - Bundle size: never import a whole library for one function.
+
+## Production Quality Gate (React)
+
+For React codebases, treat a change as production-ready only after [react-doctor](https://www.react.doctor/) scores it 95 or higher:
+
+```bash
+npx react-doctor@latest --fail-on error -y
+```
+
+It scans for security, performance, correctness, and architecture issues and outputs a 0-100 score. A score under 95 means unresolved findings — fix what it flags (don't suppress or configure around it) and re-run until it clears 95. `/ship` runs this gate automatically for React projects before pushing; `/setup-ci` can wire the same check into CI.

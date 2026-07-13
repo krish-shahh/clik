@@ -52,22 +52,7 @@ If any criterion is marked ❌, warn the user:
 
 Wait for confirmation before continuing.
 
-## Step 4: Get blast radius (if code-review-graph is installed)
-
-Before drafting the completion comment, get the structural impact of what was changed:
-
-```
-detect_changes_tool(ref="HEAD")
-get_knowledge_gaps_tool(files=[<changed files from detect_changes_tool>])
-```
-
-`detect_changes_tool` gives the blast radius — which other parts of the codebase are affected by these changes. `get_knowledge_gaps_tool` flags any affected code paths that have no test coverage.
-
-Store both results. You will include them in the `### Impact` section of the completion comment.
-
-If code-review-graph is not installed, skip this step and omit the Impact section.
-
-## Step 5: Draft the completion comment
+## Step 4: Draft the completion comment
 
 Draft the following comment and show it to the user for review:
 
@@ -86,12 +71,6 @@ Draft the following comment and show it to the user for review:
 ### Acceptance criteria
 <repeat the checklist with ✅ / ⚠️ / ❌ for each item>
 
-### Impact
-<blast radius from detect_changes_tool: affected files, flows, downstream dependents>
-
-Test coverage gaps (from get_knowledge_gaps_tool):
-<list any untested affected paths, or "none flagged">
-
 ### Decisions made
 <Non-obvious choices made during implementation and why>
 
@@ -107,7 +86,7 @@ Ask the user:
 
 Wait for confirmation. Apply any requested edits.
 
-## Step 6: Create follow-up issues
+## Step 5: Create follow-up issues
 
 If the completion comment lists follow-up issues, create them now before closing:
 ```bash
@@ -119,7 +98,7 @@ gh issue create \
 
 Capture the new issue numbers and note them in the comment.
 
-## Step 7: Post the comment and close
+## Step 6: Post the comment and close
 
 Post the confirmed comment:
 ```bash
@@ -131,7 +110,7 @@ Close the issue:
 gh issue close <number>
 ```
 
-## Step 8: Clear active issue in CLAUDE.md
+## Step 7: Clear active issue in CLAUDE.md
 
 Read `CLAUDE.md`. Find the `## Active Issue` section. Replace its content with:
 ```markdown
@@ -141,7 +120,7 @@ Read `CLAUDE.md`. Find the `## Active Issue` section. Replace its content with:
 none
 ```
 
-## Step 9: Push branch and open PR
+## Step 8: Push branch and open PR
 
 ```bash
 git push origin HEAD
@@ -165,7 +144,7 @@ gh pr create \
 
 Show the PR URL.
 
-## Step 10: Show next tasks
+## Step 9: Show next tasks
 
 ```bash
 gh issue list --state open --limit 10

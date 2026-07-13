@@ -4,7 +4,7 @@ Deterministic enforcement. Unlike rules (advisory), hooks **guarantee** behavior
 
 These scripts are the source of truth. `scripts/sync-plugins.sh` copies them into `plugins/clik/hooks/` and generates `plugins/clik/hooks/hooks.json`, which wires them with `${CLAUDE_PLUGIN_ROOT}` paths. Because they ship in the plugin, they fire in **every** project once `clik` is enabled at user scope — no per-project `settings.json` wiring.
 
-See the [main README](../README.md#hooks) for the table of what each hook does. `git/post-commit` is a git hook the `/clik` skill installs into a project to refresh the code-graph on commits made outside Claude.
+See the [main README](../README.md#hooks) for the table of what each hook does.
 
 ## Adding your own
 

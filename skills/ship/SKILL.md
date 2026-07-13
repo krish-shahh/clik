@@ -18,6 +18,16 @@ allowed-tools:
 
 Ship the current changes through commit, push, and PR creation. Confirm with the user before each step using the AskUserQuestion tool.
 
+## Step 0: Production quality gate (React projects only)
+
+If `package.json` depends on `react`, run:
+
+```bash
+npx react-doctor@latest --fail-on error -y
+```
+
+Require a score of **95 or higher** before proceeding. If it scores below 95, list the flagged issues and stop — do not stage, commit, or push until they're fixed and the project re-scores ≥95. Skip this step entirely for non-React projects.
+
 ## Step 1: Scan
 
 - Run `git status` to see all changed, staged, and untracked files
@@ -64,6 +74,7 @@ Ship the current changes through commit, push, and PR creation. Confirm with the
 
 ## Rules
 
+- NEVER skip the react-doctor gate for React projects, and never lower the 95 threshold to get something shipped
 - NEVER skip a confirmation step. Each step requires explicit user approval
 - NEVER force-push
 - NEVER commit .env, secrets, or credential files

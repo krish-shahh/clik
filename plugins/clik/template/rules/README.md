@@ -7,7 +7,7 @@ Modular instruction files Claude loads automatically. They extend `CLAUDE.md` wi
 
 Push anything that doesn't actively change Claude's behavior into a path-scoped rule, an agent, or out entirely. `/clik` selects the rules that apply to a project and tunes their `paths:` to its real directories. These also install at user scope (`~/.claude/rules/`) to apply across all projects.
 
-The current rules: `code-quality` and `testing` (always-on), and `security`, `error-handling`, `database`, `frontend`, `observability`, `code-review-graph` (path-scoped). `code-review-graph` makes the knowledge graph Claude's primary way to navigate code.
+The current rules: `code-quality` and `testing` (always-on), and `security`, `error-handling`, `database`, `frontend`, `observability` (path-scoped).
 
 ## Adding your own
 

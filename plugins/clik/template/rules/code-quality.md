@@ -29,3 +29,9 @@ alwaysApply: true
 - Imports: builtins, external, internal, relative, types. Blank line between groups.
 - Exports: named over default. One component or class per file.
 - Function order: public API first, then helpers in call order.
+
+## Simplification & Verification
+
+- Chesterton's Fence: understand why code exists before removing or simplifying it.
+- Rule of 500: a file pushing past ~500 lines is a signal to split it, not a target to defend.
+- Don't guess framework/library APIs from memory — verify signatures against the installed version's docs or types before relying on them; flag what you couldn't verify.

@@ -25,8 +25,7 @@ Parse `$ARGUMENTS`:
 
 ## Step 2: Gather context
 
-- If code-review-graph is installed, use `get_minimal_context_tool` or `detect_changes_tool` to scope to the relevant area instead of reading the whole repo.
-- Otherwise: for a PR number, `gh pr view` / `gh pr diff`; for a feature name, grep for it; for `project`, read the README and top-level structure.
+For a PR number, `gh pr view` / `gh pr diff`; for a feature name, grep for it; for `project`, read the README and top-level structure.
 
 ## Step 3: Delegate to the sales-engineer agent
 

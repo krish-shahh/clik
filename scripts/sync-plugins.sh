@@ -26,10 +26,9 @@ for d in skills/*/; do
 done
 for f in agents/*.md; do [ "$(basename "$f")" = "README.md" ] && continue; cp "$f" "$PLUGIN/agents/"; done
 
-# Hook scripts (not the test suite) + the git hook template.
+# Hook scripts (not the test suite).
 for s in hooks/*.sh; do cp "$s" "$PLUGIN/hooks/"; done
-[ -d hooks/git ] && { mkdir -p "$PLUGIN/hooks/git"; cp hooks/git/* "$PLUGIN/hooks/git/"; }
-chmod +x "$PLUGIN"/hooks/*.sh "$PLUGIN"/hooks/git/* 2>/dev/null || true
+chmod +x "$PLUGIN"/hooks/*.sh 2>/dev/null || true
 
 # Plugin hook manifest. ${CLAUDE_PLUGIN_ROOT} is set by Claude Code to the
 # plugin's install dir, so these fire in every project the plugin is enabled in
@@ -57,8 +56,7 @@ cat > "$PLUGIN/hooks/hooks.json" <<'JSON'
       {
         "matcher": "Edit|Write",
         "hooks": [
-          { "type": "command", "command": "${CLAUDE_PLUGIN_ROOT}/hooks/format-on-save.sh", "timeout": 15000, "statusMessage": "Formatting..." },
-          { "type": "command", "command": "${CLAUDE_PLUGIN_ROOT}/hooks/update-graph.sh", "timeout": 5000, "async": true, "statusMessage": "Refreshing code graph..." }
+          { "type": "command", "command": "${CLAUDE_PLUGIN_ROOT}/hooks/format-on-save.sh", "timeout": 15000, "statusMessage": "Formatting..." }
         ]
       }
     ],

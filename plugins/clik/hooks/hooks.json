@@ -20,8 +20,7 @@
       {
         "matcher": "Edit|Write",
         "hooks": [
-          { "type": "command", "command": "${CLAUDE_PLUGIN_ROOT}/hooks/format-on-save.sh", "timeout": 15000, "statusMessage": "Formatting..." },
-          { "type": "command", "command": "${CLAUDE_PLUGIN_ROOT}/hooks/update-graph.sh", "timeout": 5000, "async": true, "statusMessage": "Refreshing code graph..." }
+          { "type": "command", "command": "${CLAUDE_PLUGIN_ROOT}/hooks/format-on-save.sh", "timeout": 15000, "statusMessage": "Formatting..." }
         ]
       }
     ],

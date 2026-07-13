@@ -5,7 +5,7 @@ Slash commands you invoke with `/name`. They run in the main conversation, so th
 - `disable-model-invocation: true` → manual only; you type `/name` to trigger.
 - Without that flag, Claude can also trigger the skill automatically when relevant (only `/test-writer` does).
 
-For the full list of skills and what each does, see the [main README](../README.md#skills). The setup skill `/clik` tailors a project's config to its stack and wires the code-graph.
+For the full list of skills and what each does, see the [main README](../README.md#skills). The setup skill `/clik` tailors a project's config to its stack.
 
 ## Adding your own
 

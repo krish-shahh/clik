@@ -2,10 +2,10 @@
   "name": "clik",
   "displayName": "clik",
   "version": "0.2.0",
-  "description": "The full clik kit: workflow skills, specialist review agents, and safety/format/session + real-time code-graph hooks. Enable at user scope to get everything in every project. Run /clik [context] to tailor a project's CLAUDE.md, rules, and tooling to its domain.",
+  "description": "The full clik kit: workflow skills, specialist review agents, and safety/format/session hooks. Enable at user scope to get everything in every project. Run /clik [context] to tailor a project's CLAUDE.md, rules, and tooling to its domain.",
   "author": { "name": "krish-shahh" },
   "license": "MIT",
-  "keywords": ["workflow", "code-review", "hooks", "scaffolding", "code-review-graph", "tdd"],
+  "keywords": ["workflow", "code-review", "hooks", "scaffolding", "tdd"],
   "homepage": "https://github.com/krish-shahh/clik",
   "repository": "https://github.com/krish-shahh/clik",
   "hooks": "./hooks/hooks.json"

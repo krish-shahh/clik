@@ -10,7 +10,7 @@ Refactor `$ARGUMENTS` safely.
 ## Process
 
 ### 1. Understand the current state
-- **If code-review-graph is installed, map the blast radius FIRST** — never refactor a symbol blind. `get_impact_radius_tool` on the target, `query_graph_tool` `callers_of` to enumerate every call site you must keep working, and `tests_for` to find existing coverage. This is the difference between a safe refactor and silently breaking a caller you didn't know existed.
+- Map the blast radius FIRST — never refactor a symbol blind. Grep for every call site of the target so you know what must keep working, and find its existing test coverage. This is the difference between a safe refactor and silently breaking a caller you didn't know existed.
 - Read the code and its tests
 - Identify what the code does, its callers, and its dependencies
 - If there are no tests, WRITE TESTS FIRST. You need a safety net before changing anything

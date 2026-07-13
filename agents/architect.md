@@ -24,11 +24,6 @@ You are invoked before development starts. Your output replaces hours of upfront
 
 ### 1. Understand the existing codebase
 
-If code-review-graph is installed:
-- Call `get_minimal_context_tool` with the feature description as the query
-- Call `query_graph_tool` on the modules most likely affected
-
-Otherwise:
 - `git log --oneline -10` for recent activity
 - Glob for the most relevant source directories
 - Read the entry points (main API router, service layer, data models)
