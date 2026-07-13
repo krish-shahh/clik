@@ -3,12 +3,12 @@
   "owner": {
     "name": "krish-shahh"
   },
-  "description": "The clik kit, in one plugin: workflow skills, specialist review agents, and safety/format/session + real-time code-graph hooks. Enable at user scope to get everything in every project; run /clik [context] to tailor a repo to its domain.",
+  "description": "The clik kit, in one plugin: workflow skills, specialist review agents, and safety/format/session hooks. Enable at user scope to get everything in every project; run /clik [context] to tailor a repo to its domain.",
   "plugins": [
     {
       "name": "clik",
       "source": "./plugins/clik",
-      "description": "The full kit in one plugin: all workflow skills, specialist review agents, and safety/format/session + real-time code-graph hooks. Enable at user scope for every project. Run /clik [context] to tailor a project's CLAUDE.md, rules, and tooling to its domain.",
+      "description": "The full kit in one plugin: all workflow skills, specialist review agents, and safety/format/session hooks. Enable at user scope for every project. Run /clik [context] to tailor a project's CLAUDE.md, rules, and tooling to its domain.",
       "license": "MIT"
     }
   ]
