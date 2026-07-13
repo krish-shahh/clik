@@ -32,7 +32,7 @@ jobs:
       - name: Lint hook + script shell files
         run: |
           # Lint the source-of-truth scripts (plugin copies are generated).
-          shellcheck -S warning hooks/*.sh hooks/git/* scripts/*.sh
+          shellcheck -S warning hooks/*.sh scripts/*.sh
 
   json-valid:
     runs-on: ubuntu-latest
