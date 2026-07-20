@@ -65,33 +65,58 @@ There's no recipe library — `/clik` reasons from your context string plus the 
 
 ## Skills
 
-Invoked with `/name`. All manual-only except `/test-writer`.
+Split by who can invoke them, same convention as most Agent Skills libraries. **User-invoked** skills only run when you type `/name` — they orchestrate. **Model-invoked** skills can also be reached for automatically when the task fits, or invoked directly — they're the reusable discipline layer other skills lean on.
+
+### User-invoked
 
 | Command | Args | Description |
 |---|---|---|
 | `/clik` | `[context]` | Tailor this project's CLAUDE.md, rules, and permissions to its domain. |
 | `/init-project` | `[repo URL]` | Create/connect a GitHub repo, scaffold `CLAUDE.md`, commit and push. |
-| `/interview` | `[topic]` | One-question-at-a-time interview to extract real requirements before coding. |
 | `/idea-refine` | `[rough idea]` | Diverge then converge a vague idea into a concrete proposal. |
 | `/spec` | `[feature/project name]` | Write a PRD — objectives, scope, structure, conventions, testing, boundaries. |
 | `/plan` | `[spec file \| feature]` | Decompose a spec into small, verifiable tasks with acceptance criteria and dependency order. |
+| `/grill-with-docs` | — | A `/grilling` session that also builds the domain glossary (`CONTEXT.md`) and ADRs as it goes. |
 | `/start-issue` | `[issue #] [--worktree]` | Create `feature/issue-N-slug`, update `## Active Issue`. `--worktree` works the issue in an isolated git worktree. |
+| `/overseer` | `[task/issue description]` | Match the task against a small `@`-referenced policy table and decide what applies — TDD, `@architect`, `/doubt`, `/pr-review`, etc. — instead of leaving it to memory. Run after `/start-issue` and again before `/done`/`/ship`. |
+| `/triage` | — | Move issues and external PRs through a state machine of triage roles. |
+| `/wayfinder` | — | Plan work bigger than one session as a shared map of decision tickets on the issue tracker. |
 | `/done` | — | Check ACs against the diff, post completion comment, close issue, open PR. |
 | `/pr-review` | `[PR #, "staged", file]` | Review via specialist agents in parallel; unified severity-ranked report. |
 | `/doubt` | `[decision/claim]` | Adversarial CLAIM → EXTRACT → DOUBT → RECONCILE stress-test of an in-flight decision. |
 | `/tdd` | `[feature]` | Strict red-green-refactor loop, commit after each cycle. |
 | `/refactor` | `[target]` | Safe refactor with tests as a net; never mixes refactor with behavior change. |
 | `/debug-fix` | `[issue/error] [--fast]` | Reproduce → investigate → regression test → fix. `--fast` = hotfix mode. |
+| `/improve-codebase-architecture` | — | Scan for module-deepening opportunities, present an HTML report, then grill through the one you pick. |
 | `/adr` | `[decision title]` | Write an Architecture Decision Record for a significant technical decision. |
 | `/deprecate` | `[API/module/system]` | Mark deprecated, migrate callers, remove on a set timeline. |
 | `/ship` | `[msg]` | Stage, commit (skipping secrets), push, open PR — confirmed at each step. Gates React projects on a react-doctor score ≥95. |
 | `/setup-ci` | — | Scaffold a GitHub Actions CI for the detected stack. |
 | `/deploy` | `[vercel\|railway\|fly\|render]` | Detect stack, scaffold config, walk env-var checklist, deploy. |
 | `/standup` | `[hours]` | Standup from git + GitHub activity. Default 24h. |
-| `/test-writer` | *(auto)* | Comprehensive tests for new/changed code. The only auto-triggering skill. |
 | `/story` | `[feature\|PR #\|project] [client scope]` | Frame a feature, PR, or the project into a customer demo story. |
+| `/handoff` | `[what's next]` | Compact the current conversation into a handoff doc for the next session. |
+| `/show-me-your-work` | — | TSV decision-trail log (what/why/evidence/result) for long-running or unattended work. |
+
+### Model-invoked
+
+Reach for these directly too, but they're also auto-triggered when the task fits.
+
+| Command | Description |
+|---|---|
+| `/grilling` | Relentless one-question-at-a-time interrogation to stress-test a plan or decision. |
+| `/domain-modeling` | Sharpen the project's ubiquitous language and record decisions in `CONTEXT.md`/ADRs as they crystallize. |
+| `/codebase-design` | Shared vocabulary for deep modules — interface, seam, depth — for finding or evaluating a clean boundary. |
+| `/prototype` | Build a throwaway prototype (terminal app or toggleable UI variants) to settle a design question empirically. |
+| `/resolving-merge-conflicts` | Work an in-progress merge/rebase conflict hunk by hunk, resolving by intent — never `--abort`. |
+| `/blast-radius` | Prove what a change could break beyond the diff by running real code, not writing a convincing paragraph. |
+| `/test-writer` | Comprehensive tests for new or changed code. |
 
 > **Platform tooling is intentionally out of scope.** Vercel, Supabase, shadcn, Stripe, etc. are better served by the official Anthropic/vendor plugins and MCP servers. clik tailors your project's config and ships the review/workflow kit — it doesn't reinvent platform integrations.
+
+### How `/overseer` stays current
+
+No generated index to fall out of sync — `/overseer`'s policy table `@`-references the real skill and agent files directly (`@../tdd/SKILL.md`, `@../../agents/architect.md`, etc.), the same `@path` convention used in `CLAUDE.md`/`AGENTS.md` imports. A reference can't drift from what it points at because it isn't a copy of anything.
 
 ## Agents
 

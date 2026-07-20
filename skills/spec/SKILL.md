@@ -15,7 +15,7 @@ Write a spec for: **$ARGUMENTS**
 
 ## Step 1: Gather context
 
-Read the existing codebase (relevant modules, `CLAUDE.md`, recent related commits) so the spec fits real conventions instead of inventing new ones. If the ask is underspecified, use `/interview` first rather than guessing.
+Read the existing codebase (relevant modules, `CLAUDE.md`, recent related commits) so the spec fits real conventions instead of inventing new ones. If the ask is underspecified, use `/grilling` first rather than guessing.
 
 ## Step 2: Draft the spec
 

@@ -102,4 +102,5 @@ Tell the user:
 - Branch created: `feature/issue-<number>-<slug>` (and, in `--worktree` mode, the worktree path + the `cd` to enter it)
 - Issue #<number> assigned to them
 - The acceptance criteria (extracted from the issue body), formatted as a checklist
+- Recommend `/overseer` next — it decides which of clik's other skills this task needs (TDD, `@architect`, grilling, etc.) instead of leaving it to memory
 - Reminder: run `/done` when the work is complete (and, for a worktree, `git worktree remove` after merge)

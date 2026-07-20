@@ -12,6 +12,8 @@ allowed-tools:
 
 Wrap up the current issue: verify acceptance criteria, post a completion comment, close the issue, open a PR, and queue the next task.
 
+If `/overseer` hasn't run yet for this diff, recommend it before continuing — it decides whether this change needs `/doubt`, `/blast-radius`, or `/pr-review` first. Don't block on it; note the recommendation and proceed if the user wants to skip straight to closing out.
+
 ## Step 1: Resolve the issue number
 
 Try the branch name first:

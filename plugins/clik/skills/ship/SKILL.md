@@ -18,6 +18,8 @@ allowed-tools:
 
 Ship the current changes through commit, push, and PR creation. Confirm with the user before each step using the AskUserQuestion tool.
 
+If `/overseer` hasn't run yet for this diff, recommend it before continuing — it decides whether this change needs `/doubt`, `/blast-radius`, or `/pr-review` first. Don't block on it; note the recommendation and proceed if the user wants to skip straight to shipping.
+
 ## Step 0: Production quality gate (React projects only)
 
 If `package.json` depends on `react`, run:
