@@ -94,6 +94,7 @@ Split by who can invoke them, same convention as most Agent Skills libraries. **
 | `/setup-ci` | — | Scaffold a GitHub Actions CI for the detected stack. |
 | `/deploy` | `[vercel\|railway\|fly\|render]` | Detect stack, scaffold config, walk env-var checklist, deploy. |
 | `/standup` | `[hours]` | Standup from git + GitHub activity. Default 24h. |
+| `/eod` | `[hours]` | End-of-day update from today's Claude sessions, git activity, and code changes; files the durable bits into a personal wiki (Karpathy LLM Wiki pattern). Default: since local midnight. |
 | `/story` | `[feature\|PR #\|project] [client scope]` | Frame a feature, PR, or the project into a customer demo story. |
 | `/handoff` | `[what's next]` | Compact the current conversation into a handoff doc for the next session. |
 | `/show-me-your-work` | — | TSV decision-trail log (what/why/evidence/result) for long-running or unattended work. |
