@@ -108,7 +108,8 @@ Reach for these directly too, but they're also auto-triggered when the task fits
 | `/grilling` | Relentless one-question-at-a-time interrogation to stress-test a plan or decision. |
 | `/domain-modeling` | Sharpen the project's ubiquitous language and record decisions in `CONTEXT.md`/ADRs as they crystallize. |
 | `/codebase-design` | Shared vocabulary for deep modules — interface, seam, depth — for finding or evaluating a clean boundary. |
-| `/prototype` | Build a throwaway prototype (terminal app or toggleable UI variants) to settle a design question empirically. |
+| `/prototype` | Build a throwaway prototype (shareable HTML demo or toggleable UI variants) to settle a design question empirically. |
+| `/landing-page-design` | Strategy and strict visual system for building or reviewing high-converting landing pages — structure, copy, typography, spacing, motion. |
 | `/resolving-merge-conflicts` | Work an in-progress merge/rebase conflict hunk by hunk, resolving by intent — never `--abort`. |
 | `/blast-radius` | Prove what a change could break beyond the diff by running real code, not writing a convincing paragraph. |
 | `/test-writer` | Comprehensive tests for new or changed code. |
